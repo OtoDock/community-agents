@@ -1,0 +1,12 @@
+{
+  "schema_version": "1",
+  "slug": "personal-assistant-pro",
+  "display_name": "Personal Assistant Pro",
+  "description": "Full-feature personal assistant with Google Workspace, maps, phone calls, image gen, and document editing. Requires admin OAuth + API key setup (see setup.md).",
+  "color": "#3B82F6",
+  "version": "1.0.0",
+  "default_model": "",
+  "default_layer": "claude-code-cli",
+  "execution_paths": ["claude-code-cli", "codex", "direct-llm"],
+  "internal": false
+}

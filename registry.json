@@ -1,0 +1,78 @@
+{
+  "agents": [
+    {
+      "author": "OtoDock",
+      "author_url": "https://github.com/OtoDock",
+      "category": "productivity",
+      "color": "#3B82F6",
+      "deprecated": false,
+      "deprecation_note": null,
+      "description": "Full-feature personal assistant with Google Workspace, maps, phone calls, image gen, and document editing. Requires admin OAuth + API key setup (see setup.md).",
+      "display_name": "Personal Assistant Pro",
+      "has_docs": false,
+      "has_notifications": false,
+      "has_setup": true,
+      "has_tasks": false,
+      "has_triggers": false,
+      "icon_url": null,
+      "license": "Apache-2.0",
+      "long_description_url": "./personal-assistant-pro/README.md",
+      "manifest_url": "./personal-assistant-pro/agent.json",
+      "platform_min_version": "0.4.0",
+      "readme_url": "./personal-assistant-pro/README.md",
+      "required_mcps": [
+        {
+          "name": "task-mcp"
+        },
+        {
+          "name": "notifications-mcp"
+        },
+        {
+          "name": "meetings-mcp"
+        },
+        {
+          "name": "display-mcp"
+        },
+        {
+          "name": "file-tools-mcp"
+        },
+        {
+          "name": "image-gen-mcp"
+        },
+        {
+          "name": "triggers-mcp"
+        },
+        {
+          "name": "mcps-mcp"
+        },
+        {
+          "name": "agent-config-mcp"
+        },
+        {
+          "name": "workspace-mcp",
+          "skills": [
+            "email",
+            "calendar",
+            "contacts",
+            "drive"
+          ]
+        },
+        {
+          "name": "google-maps"
+        },
+        {
+          "name": "phone-mcp"
+        },
+        {
+          "name": "location-mcp"
+        }
+      ],
+      "slug": "personal-assistant-pro",
+      "tags": [],
+      "version": "1.0.0"
+    }
+  ],
+  "platform_min_version": "0.4.0",
+  "registry_version": "1",
+  "updated_at": "2026-05-15T18:00:58Z"
+}
