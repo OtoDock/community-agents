@@ -7,7 +7,7 @@
   "version": "1.0.0",
   "default_model": "",
   "default_layer": "claude-code-cli",
-  "execution_paths": ["claude-code-cli", "codex", "direct-llm"],
+  "execution_paths": ["claude-code-cli", "codex-cli", "direct-llm"],
   "internal": false,
   "category": "productivity",
   "tags": ["assistant", "gmail", "calendar", "contacts", "maps", "phone-calls", "documents", "images", "location"],
