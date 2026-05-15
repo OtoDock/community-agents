@@ -31,7 +31,7 @@ An OtoDock agent template is a directory with one required manifest (`agent.json
   "version": "1.0.0",
   "default_model": "",
   "default_layer": "claude-code-cli",
-  "execution_paths": ["claude-code-cli", "codex", "direct-llm"],
+  "execution_paths": ["claude-code-cli", "codex-cli", "direct-llm"],
   "internal": false,
   "category": "productivity",
   "tags": ["calendar", "email"],
@@ -53,8 +53,8 @@ An OtoDock agent template is a directory with one required manifest (`agent.json
 | `color` | yes | Accent color (`#RRGGBB`). |
 | `version` | yes | Semver. Bump when prompt or required MCPs change. |
 | `default_model` | yes | Empty string = the platform's default. |
-| `default_layer` | yes | One of `claude-code-cli`, `codex`, `direct-llm`. |
-| `execution_paths` | yes | Subset of the above. Must include `default_layer`. |
+| `default_layer` | yes | One of `claude-code-cli`, `codex-cli`, `direct-llm`. These are the registered layer paths in `core/session_manager._LAYERS`. Note `codex-cli` (with the `-cli` suffix), not `codex`. |
+| `execution_paths` | yes | Non-empty subset of the above. Must include `default_layer`. **Order matters at install time**: `execution_paths[0]` becomes the primary default — keep your `default_layer` first. |
 | `internal` | no | Always `false` for community templates. |
 | `category` | no | `productivity` / `infrastructure` / `creative` / `research` / `customer-support` / `experimental`. |
 | `tags` | no | Lowercase, searchable. |
