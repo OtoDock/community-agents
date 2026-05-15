@@ -2,11 +2,16 @@
   "schema_version": "1",
   "slug": "personal-assistant-pro",
   "display_name": "Personal Assistant Pro",
-  "description": "Full-feature personal assistant with Google Workspace, maps, phone calls, image gen, and document editing. Requires admin OAuth + API key setup (see setup.md).",
+  "description": "Full-feature personal assistant with Google Workspace (Gmail, Calendar, Contacts, Drive), Google Maps for places and directions, phone-call automation for restaurant/doctor/appointment bookings, document editing (docx, xlsx, pptx, PDF), image generation and editing, location awareness, and multi-agent meetings. Requires admin OAuth + API key setup (walked through by the included setup.md).",
   "color": "#3B82F6",
   "version": "1.0.0",
   "default_model": "",
   "default_layer": "claude-code-cli",
   "execution_paths": ["claude-code-cli", "codex", "direct-llm"],
-  "internal": false
+  "internal": false,
+  "category": "productivity",
+  "tags": ["assistant", "gmail", "calendar", "contacts", "maps", "phone-calls", "documents", "images", "location"],
+  "author": "OtoDock",
+  "author_url": "https://github.com/OtoDock",
+  "license": "Apache-2.0"
 }

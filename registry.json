@@ -4,10 +4,71 @@
       "author": "OtoDock",
       "author_url": "https://github.com/OtoDock",
       "category": "productivity",
+      "color": "#10B981",
+      "deprecated": false,
+      "deprecation_note": null,
+      "description": "Out-of-the-box assistant. Schedules tasks and reminders, creates and edits Office documents (docx, xlsx, pptx, PDF), generates and edits images on-device, manages files, fires webhook triggers, and coordinates multi-agent meetings. No external API keys or OAuth setup required.",
+      "display_name": "Personal Assistant Lite",
+      "has_docs": false,
+      "has_notifications": false,
+      "has_setup": false,
+      "has_tasks": false,
+      "has_triggers": false,
+      "icon_url": null,
+      "license": "Apache-2.0",
+      "long_description_url": "./personal-assistant-lite/README.md",
+      "manifest_url": "./personal-assistant-lite/agent.json",
+      "platform_min_version": "0.4.0",
+      "readme_url": "./personal-assistant-lite/README.md",
+      "required_mcps": [
+        {
+          "name": "task-mcp"
+        },
+        {
+          "name": "notifications-mcp"
+        },
+        {
+          "name": "meetings-mcp"
+        },
+        {
+          "name": "display-mcp"
+        },
+        {
+          "name": "file-tools-mcp"
+        },
+        {
+          "name": "image-gen-mcp"
+        },
+        {
+          "name": "triggers-mcp"
+        },
+        {
+          "name": "mcps-mcp"
+        },
+        {
+          "name": "agent-config-mcp"
+        }
+      ],
+      "slug": "personal-assistant-lite",
+      "tags": [
+        "assistant",
+        "tasks",
+        "reminders",
+        "documents",
+        "images",
+        "meetings",
+        "out-of-box"
+      ],
+      "version": "1.0.0"
+    },
+    {
+      "author": "OtoDock",
+      "author_url": "https://github.com/OtoDock",
+      "category": "productivity",
       "color": "#3B82F6",
       "deprecated": false,
       "deprecation_note": null,
-      "description": "Full-feature personal assistant with Google Workspace, maps, phone calls, image gen, and document editing. Requires admin OAuth + API key setup (see setup.md).",
+      "description": "Full-feature personal assistant with Google Workspace (Gmail, Calendar, Contacts, Drive), Google Maps for places and directions, phone-call automation for restaurant/doctor/appointment bookings, document editing (docx, xlsx, pptx, PDF), image generation and editing, location awareness, and multi-agent meetings. Requires admin OAuth + API key setup (walked through by the included setup.md).",
       "display_name": "Personal Assistant Pro",
       "has_docs": false,
       "has_notifications": false,
@@ -68,11 +129,21 @@
         }
       ],
       "slug": "personal-assistant-pro",
-      "tags": [],
+      "tags": [
+        "assistant",
+        "gmail",
+        "calendar",
+        "contacts",
+        "maps",
+        "phone-calls",
+        "documents",
+        "images",
+        "location"
+      ],
       "version": "1.0.0"
     }
   ],
   "platform_min_version": "0.4.0",
   "registry_version": "1",
-  "updated_at": "2026-05-15T18:00:58Z"
+  "updated_at": "2026-05-15T18:46:29Z"
 }

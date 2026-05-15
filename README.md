@@ -10,7 +10,8 @@ A pre-built agent: prompt, MCP requirements, optional scheduled tasks, optional 
 
 | Slug | Description |
 |---|---|
-| `personal-assistant-pro` | Full personal assistant — Gmail, Calendar, Contacts, Drive, maps, phone calls, docs, images. Requires admin OAuth + API keys. |
+| `personal-assistant-lite` | Out-of-the-box assistant — tasks, reminders, documents, images. No external API keys. Ships bundled with OtoDock; also installable from this catalog for re-deployment or extra copies. |
+| `personal-assistant-pro` | Full personal assistant — Gmail, Calendar, Contacts, Drive, maps, phone calls, docs, images. Requires admin OAuth + API keys (setup guide included). |
 
 ## Adding a new template
 

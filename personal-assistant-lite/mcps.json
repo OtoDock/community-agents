@@ -1,0 +1,13 @@
+{
+  "required": [
+    {"name": "task-mcp"},
+    {"name": "notifications-mcp"},
+    {"name": "meetings-mcp"},
+    {"name": "display-mcp"},
+    {"name": "file-tools-mcp"},
+    {"name": "image-gen-mcp"},
+    {"name": "triggers-mcp"},
+    {"name": "mcps-mcp"},
+    {"name": "agent-config-mcp"}
+  ]
+}
