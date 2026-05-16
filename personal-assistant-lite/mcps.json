@@ -4,7 +4,7 @@
     {"name": "notifications-mcp"},
     {"name": "meetings-mcp"},
     {"name": "display-mcp"},
-    {"name": "file-tools-mcp"},
+    {"name": "file-tools"},
     {"name": "image-gen-mcp"},
     {"name": "triggers-mcp"},
     {"name": "mcps-mcp"},

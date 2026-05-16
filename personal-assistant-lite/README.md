@@ -26,7 +26,7 @@ For any of those, install the **personal-assistant-pro** community template alon
 - `notifications-mcp` — user-facing notifications
 - `meetings-mcp` — multi-agent meetings
 - `display-mcp` — image display in chat
-- `file-tools-mcp` — Office docs + image gen/edit (Docker MCP)
+- `file-tools` — Office docs + image edit (Docker MCP; folder is `file-tools-mcp/` but manifest name is `file-tools`)
 - `image-gen-mcp` — local image generation
 - `triggers-mcp` — webhook triggers
 - `mcps-mcp` — browse / request community MCPs from chat

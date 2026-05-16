@@ -2,7 +2,7 @@
 
 Welcome. This agent uses external services that need one-time admin configuration. Walk through each section below; when everything works, ask the agent to call its `complete_setup` tool to remove this file from auto-loaded context.
 
-## 1. Google Workspace OAuth (`workspace-mcp`)
+## 1. Google Workspace OAuth (`google-workspace`)
 
 The Workspace MCP gives the agent access to Gmail, Calendar, Contacts, and Drive on a per-user basis. Each user authorizes their own Google account — the platform stores per-user OAuth tokens, not a shared service account.
 

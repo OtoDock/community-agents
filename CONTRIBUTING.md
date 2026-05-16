@@ -69,17 +69,37 @@ An OtoDock agent template is a directory with one required manifest (`agent.json
 {
   "required": [
     {"name": "task-mcp"},
-    {"name": "workspace-mcp", "min_version": "1.0.0", "skills": ["email", "calendar"]},
+    {"name": "google-workspace", "min_version": "1.0.0", "skills": ["email", "calendar"]},
     {"name": "google-maps"}
   ]
 }
 ```
 
-- `name` — MCP slug (custom or community).
+- `name` — MCP slug **as declared in the MCP's `manifest.json::name` field**. This is NOT necessarily the folder name. See the naming gotcha below.
 - `min_version` (optional) — minimum installed version required.
 - `skills` (optional) — default-enabled skills. Empty list = all defaults from the MCP's own manifest.
 
-The platform pre-validates that every required MCP is in the platform's local installs OR the community-mcps catalog before creating the agent. If anything's missing AND not in any catalog, install hard-fails — list only MCPs that exist somewhere.
+The platform pre-validates that every required MCP is in the platform's local installs OR the [community-mcps catalog](https://github.com/OtoDock/community-mcps) before creating the agent. If anything's missing AND not in any catalog, install hard-fails — list only MCPs that exist somewhere.
+
+### ⚠ MCP name vs folder name — common gotcha
+
+The MCP `name` field in `manifest.json` is the canonical slug used by the platform (agent_mcps DB rows, runtime lookups, your `mcps.json::required[].name`). It is sometimes different from the folder name. As of the v1 launch, these mismatches exist and contributors must use the manifest `name`, NOT the folder name:
+
+| Folder | Canonical `name` |
+|---|---|
+| `mcps/custom/file-tools-mcp/` | `file-tools` |
+| `mcps/community/workspace-mcp/` | `google-workspace` |
+| `mcps/community/ha-mcp/` | `home-assistant` |
+
+If your template's `mcps.json` references the folder name where it doesn't match the manifest name, the platform's preflight check will report the MCP as "Not installed; NOT in any catalog" even though it's clearly running. Check `manifest.json::name` when in doubt.
+
+### Bundled custom MCPs available to every template
+
+These ship with the platform and are always available — list them in `mcps.json::required` if your template needs them, no admin install needed:
+
+`task-mcp`, `notifications-mcp`, `meetings-mcp`, `display-mcp`, `file-tools` (folder: `file-tools-mcp/`), `image-gen-mcp`, `triggers-mcp`, `mcps-mcp`, `agent-config-mcp`, `phone-mcp`, `location-mcp`.
+
+Anything else must come from the community-mcps catalog (`google-workspace`, `google-maps`, `home-assistant`, `ssh-server`, `prometheus`, etc.) — the platform will queue an admin install-request as part of the cascade.
 
 ## `tasks.json` (optional)
 
@@ -149,7 +169,7 @@ Anything in this folder is copied recursively to the new agent's `config/docs/` 
 
 1. Slug + folder name match.
 2. `version` matches between manifest and (if shipped) any change-history.
-3. Every MCP in `mcps.json` exists in OtoDock/community-mcps OR is a platform-bundled custom MCP (`task-mcp`, `notifications-mcp`, `meetings-mcp`, `display-mcp`, `file-tools-mcp`, `image-gen-mcp`, `triggers-mcp`, `mcps-mcp`, `agent-config-mcp`, `phone-mcp`, `location-mcp`).
+3. Every MCP in `mcps.json` uses the **canonical name** (the `manifest.json::name` field, not the folder name) and exists in [OtoDock/community-mcps](https://github.com/OtoDock/community-mcps) OR is a platform-bundled custom MCP. The bundled set is: `task-mcp`, `notifications-mcp`, `meetings-mcp`, `display-mcp`, `file-tools` (folder is `file-tools-mcp/`), `image-gen-mcp`, `triggers-mcp`, `mcps-mcp`, `agent-config-mcp`, `phone-mcp`, `location-mcp`. See the "MCP name vs folder name" gotcha above.
 4. Run `python3 scripts/generate-registry.py` and commit the regenerated `registry.json`.
 5. README explains what the agent does, what setup is needed, who would use it.
 

@@ -32,12 +32,12 @@ Ask the agent for help with each. When everything is verified, tell the agent **
 | `notifications-mcp` | Push notifications | No |
 | `meetings-mcp` | Multi-agent meetings | No |
 | `display-mcp` | Image display in chat | No |
-| `file-tools-mcp` | Office docs + image edit | No |
+| `file-tools` | Office docs + image edit | No |
 | `image-gen-mcp` | Image generation | No |
 | `triggers-mcp` | Webhook triggers | No |
 | `mcps-mcp` | Browse / request more MCPs from chat | No |
 | `agent-config-mcp` | Agent self-config | No |
-| `workspace-mcp` | Gmail / Calendar / Contacts / Drive | Yes — OAuth client + per-user auth |
+| `google-workspace` | Gmail / Calendar / Contacts / Drive | Yes — OAuth client + per-user auth |
 | `google-maps` | Places + directions | Yes — API key |
 | `phone-mcp` | Phone calls | Yes — FreePBX or Twilio |
 | `location-mcp` | GPS awareness | No (dashboard WS bridge) |

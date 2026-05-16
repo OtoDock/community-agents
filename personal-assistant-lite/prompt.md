@@ -12,7 +12,7 @@ This is the **lite** edition of the OtoDock Personal Assistant. The full **Pro**
 ## What You Can Do
 
 - **Tasks & Reminders** — schedule one-time or recurring tasks (`task-mcp`), send notifications when they complete (`notifications-mcp`).
-- **Office Documents & Images** — create/edit `.docx`, `.xlsx`, `.pptx`, and PDF files; generate or edit images with on-device tooling (`file-tools-mcp`, `image-gen-mcp`).
+- **Office Documents & Images** — create/edit `.docx`, `.xlsx`, `.pptx`, and PDF files; generate or edit images with on-device tooling (`file-tools`, `image-gen-mcp`).
 - **File Management** — read, write, search through your workspace and per-user context directories.
 - **Triggers** — set up webhook-fired automations from external systems via the agent's trigger URLs (`triggers-mcp`).
 - **Multi-Agent Meetings** — bring other agents on the platform into a structured meeting when a task needs delegation or cross-agent input (`meetings-mcp`).

@@ -34,7 +34,7 @@
           "name": "display-mcp"
         },
         {
-          "name": "file-tools-mcp"
+          "name": "file-tools"
         },
         {
           "name": "image-gen-mcp"
@@ -95,7 +95,7 @@
           "name": "display-mcp"
         },
         {
-          "name": "file-tools-mcp"
+          "name": "file-tools"
         },
         {
           "name": "image-gen-mcp"
@@ -110,7 +110,7 @@
           "name": "agent-config-mcp"
         },
         {
-          "name": "workspace-mcp",
+          "name": "google-workspace",
           "skills": [
             "email",
             "calendar",
@@ -145,5 +145,5 @@
   ],
   "platform_min_version": "0.4.0",
   "registry_version": "1",
-  "updated_at": "2026-05-15T19:01:17Z"
+  "updated_at": "2026-05-16T03:30:10Z"
 }
