@@ -15,7 +15,7 @@ Heavier than the bundled `personal-assistant-lite` (which ships out-of-the-box a
 
 ## What you need to set up
 
-After install, the agent's `config/docs/setup.md` walks the manager through the four configuration sections:
+After install, the agent's `config/context/setup.md` walks the manager through the four configuration sections:
 
 1. Google Workspace OAuth (client_id + client_secret in admin settings; per-user authorization on first request).
 2. Google Maps API key (one platform-wide instance).

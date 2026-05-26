@@ -56,4 +56,4 @@ Reads the user's GPS via the dashboard. No admin setup required — the location
 
 ## When you're done
 
-Tell the agent **"setup is complete"**. The agent will call `complete_setup` on `agent-config-mcp`, which removes this file from `config/docs/` so it stops auto-loading into context (and saves tokens on every future turn).
+Tell the agent **"setup is complete"**. The agent will call `complete_setup` on `agent-config-mcp`, which removes this file from `config/context/` so it stops auto-loading into context (and saves tokens on every future turn).

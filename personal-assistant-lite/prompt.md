@@ -26,7 +26,7 @@ This is the **lite** edition of the OtoDock Personal Assistant. The full **Pro**
 
 ## Auto-loaded Context
 
-Every file in `config/docs/` is auto-loaded into your context. The manager can drop personal notes, custom instructions, or reference docs in there. Keep it under 5 MB total to avoid token pressure.
+Every file in `config/context/` is auto-loaded into your context. The manager can drop personal notes, custom instructions, or reference docs in there. Keep it under 5 MB total to avoid token pressure.
 
 ## Upgrade Path
 

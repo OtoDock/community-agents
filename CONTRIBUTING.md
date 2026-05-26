@@ -1,6 +1,6 @@
 # Contributing an agent template
 
-An OtoDock agent template is a directory with one required manifest (`agent.json`), one system prompt (`prompt.md`), a required-MCPs declaration (`mcps.json`), and a README. Optional files seed scheduled tasks, webhook triggers, scheduled notifications, a setup guide, and auto-context docs.
+An OtoDock agent template is a directory with one required manifest (`agent.json`), one system prompt (`prompt.md`), a required-MCPs declaration (`mcps.json`), and a README. Optional files seed scheduled tasks, webhook triggers, scheduled notifications, a setup guide, and auto-context files.
 
 ## Folder layout
 
@@ -13,8 +13,8 @@ An OtoDock agent template is a directory with one required manifest (`agent.json
 ├── tasks.json              # optional — scheduled tasks (cron / interval)
 ├── triggers.json           # optional — webhook-fired triggers
 ├── notifications.json      # optional — scheduled user-facing notifications
-├── setup.md                # optional — copied to config/docs/setup.md; agent removes via complete_setup
-├── docs/                   # optional — auto-loaded into config/docs/
+├── setup.md                # optional — copied to config/context/setup.md; agent removes via complete_setup
+├── context/                # optional — auto-loaded into config/context/
 │   └── *.md / *.txt
 └── icon.png                # optional — 256×256 PNG; falls back to color + first letter
 ```
@@ -62,6 +62,7 @@ An OtoDock agent template is a directory with one required manifest (`agent.json
 | `author_url` | no | Profile link. |
 | `license` | no | SPDX identifier. |
 | `platform_min_version` | no | Minimum platform version for compat. |
+| `default_for_new_users` | no | Object `{enabled: bool, role: "viewer"\|"editor"\|"manager"}`. When `enabled` is `true`, the OtoDock platform attaches every newly-signed-up user to this agent with the chosen per-agent role. Platform admins can override the manifest choice per-install via the agent's Setup tab. Most templates should leave this unset; only set it if your agent is designed to be a default-baseline experience for every user. Recommended role: `"viewer"` for personal-assistant-style templates (read-only on the shared workspace, writable in the user's own dir), `"editor"` for templates with a shared knowledge base the team is meant to contribute to, `"manager"` only for templates where every user is expected to administer the agent. |
 
 ## `mcps.json`
 
@@ -159,11 +160,11 @@ Same shape as tasks but no `schedule` field — triggers fire via webhook. Defau
 
 ## `setup.md` (optional)
 
-A markdown file that walks the manager through post-install configuration (OAuth flows, API keys, etc.). Copied to the new agent's `config/docs/setup.md` so it auto-loads into the agent's context. When configuration is verified done, the manager tells the agent "setup is complete" and the agent calls its `complete_setup` tool (from `agent-config-mcp`) which deletes the file. Subsequent chat turns no longer pay the token cost.
+A markdown file that walks the manager through post-install configuration (OAuth flows, API keys, etc.). Copied to the new agent's `config/context/setup.md` so it auto-loads into the agent's context. When configuration is verified done, the manager tells the agent "setup is complete" and the agent calls its `complete_setup` tool (from `agent-config-mcp`) which deletes the file. Subsequent chat turns no longer pay the token cost.
 
-## `docs/` (optional)
+## `context/` (optional)
 
-Anything in this folder is copied recursively to the new agent's `config/docs/` and auto-loads as context (markdown + text files, 1 MB per file, 5 MB total cap).
+Anything in this folder is copied recursively to the new agent's `config/context/` and auto-loads as context (markdown + text files, 1 MB per file, 5 MB total cap).
 
 ## PR checklist
 

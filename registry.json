@@ -9,8 +9,8 @@
       "deprecation_note": null,
       "description": "Out-of-the-box assistant. Schedules tasks and reminders, creates and edits Office documents (docx, xlsx, pptx, PDF), generates and edits images on-device, manages files, fires webhook triggers, and coordinates multi-agent meetings. No external API keys or OAuth setup required.",
       "display_name": "Personal Assistant Lite",
-      "has_docs": false,
-      "has_notifications": false,
+      "has_context": false,
+      "has_notifications": true,
       "has_setup": false,
       "has_tasks": false,
       "has_triggers": false,
@@ -59,7 +59,7 @@
         "meetings",
         "out-of-box"
       ],
-      "version": "1.0.0"
+      "version": "1.1.0"
     },
     {
       "author": "OtoDock",
@@ -70,8 +70,8 @@
       "deprecation_note": null,
       "description": "Full-feature personal assistant with Google Workspace (Gmail, Calendar, Contacts, Drive), Google Maps for places and directions, phone-call automation for restaurant/doctor/appointment bookings, document editing (docx, xlsx, pptx, PDF), image generation and editing, location awareness, and multi-agent meetings. Requires admin OAuth + API key setup (walked through by the included setup.md).",
       "display_name": "Personal Assistant Pro",
-      "has_docs": false,
-      "has_notifications": false,
+      "has_context": false,
+      "has_notifications": true,
       "has_setup": true,
       "has_tasks": false,
       "has_triggers": false,
@@ -140,10 +140,10 @@
         "images",
         "location"
       ],
-      "version": "1.0.0"
+      "version": "1.1.0"
     }
   ],
   "platform_min_version": "0.4.0",
   "registry_version": "1",
-  "updated_at": "2026-05-16T03:30:10Z"
+  "updated_at": "2026-05-26T06:15:21Z"
 }

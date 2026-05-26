@@ -4,7 +4,7 @@
   "display_name": "Personal Assistant Lite",
   "description": "Out-of-the-box assistant. Schedules tasks and reminders, creates and edits Office documents (docx, xlsx, pptx, PDF), generates and edits images on-device, manages files, fires webhook triggers, and coordinates multi-agent meetings. No external API keys or OAuth setup required.",
   "color": "#10B981",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "default_model": "",
   "default_layer": "claude-code-cli",
   "execution_paths": ["claude-code-cli", "codex-cli", "direct-llm"],
@@ -13,5 +13,6 @@
   "tags": ["assistant", "tasks", "reminders", "documents", "images", "meetings", "out-of-box"],
   "author": "OtoDock",
   "author_url": "https://github.com/OtoDock",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "default_for_new_users": { "enabled": true, "role": "viewer" }
 }

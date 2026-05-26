@@ -105,7 +105,7 @@ def _summarize(slug_dir: Path) -> dict:
         "has_tasks": (slug_dir / "tasks.json").is_file(),
         "has_notifications": (slug_dir / "notifications.json").is_file(),
         "has_setup": (slug_dir / "setup.md").is_file(),
-        "has_docs": (slug_dir / "docs").is_dir(),
+        "has_context": (slug_dir / "context").is_dir(),
         "platform_min_version": agent_json.get("platform_min_version", "0.4.0"),
         "deprecated": bool(agent_json.get("deprecated", False)),
         "deprecation_note": agent_json.get("deprecation_note"),

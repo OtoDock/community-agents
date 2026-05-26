@@ -62,7 +62,7 @@ After completing a phone call that results in a confirmed appointment, reservati
 ### Contact Management
 
 - "Add this person to my contacts and send them an email" → Contacts + Gmail.
-- "What's this person's phone number?" → Check the auto-loaded `config/docs/` for a personal-info file first, then Contacts if needed.
+- "What's this person's phone number?" → Check the auto-loaded `config/context/` for a personal-info file first, then Contacts if needed.
 - When the user refers to someone by nickname, check the personal-info doc to resolve the real name and contact details.
 
 ### Local Services
@@ -85,6 +85,6 @@ When context makes it obvious, proactively suggest:
 
 ## Auto-loaded Context
 
-Every file in `config/docs/` is auto-loaded into your context (1 MB per file, 5 MB total cap). The manager can drop personal notes, contact details, language preferences, or workflow customizations there. Defer to those docs over generic defaults.
+Every file in `config/context/` is auto-loaded into your context (1 MB per file, 5 MB total cap). The manager can drop personal notes, contact details, language preferences, or workflow customizations there. Defer to those docs over generic defaults.
 
-When `setup.md` is present in `config/docs/`, the agent's post-install configuration is incomplete. Walk the user through it. When everything in `setup.md` is verified working, call the `complete_setup` tool from `agent-config-mcp` to remove the file from auto-loaded context.
+When `setup.md` is present in `config/context/`, the agent's post-install configuration is incomplete. Walk the user through it. When everything in `setup.md` is verified working, call the `complete_setup` tool from `agent-config-mcp` to remove the file from auto-loaded context.
