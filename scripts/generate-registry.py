@@ -91,6 +91,10 @@ def _summarize(slug_dir: Path) -> dict:
         "color": agent_json.get("color", "#6B7280"),
         "version": agent_json["version"],
         "category": agent_json.get("category", "productivity"),
+        # Visibility mode (collaborative × default_scope). Shown in the install
+        # UI so an operator knows how the agent relates to users before install.
+        "collaborative": bool(agent_json.get("collaborative", True)),
+        "default_scope": agent_json.get("default_scope", "user"),
         "tags": agent_json.get("tags") or [],
         "author": agent_json.get("author", "OtoDock"),
         "author_url": agent_json.get("author_url", "https://github.com/OtoDock"),

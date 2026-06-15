@@ -9,6 +9,8 @@
   "default_layer": "claude-code-cli",
   "execution_paths": ["claude-code-cli", "codex-cli", "direct-llm"],
   "internal": false,
+  "collaborative": false,
+  "default_scope": "user",
   "category": "productivity",
   "tags": ["assistant", "tasks", "reminders", "documents", "images", "meetings", "out-of-box"],
   "author": "OtoDock",

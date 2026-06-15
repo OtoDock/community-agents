@@ -9,6 +9,8 @@
   "default_layer": "claude-code-cli",
   "execution_paths": ["claude-code-cli", "codex-cli", "direct-llm"],
   "internal": false,
+  "collaborative": false,
+  "default_scope": "user",
   "category": "productivity",
   "tags": ["assistant", "gmail", "calendar", "contacts", "maps", "phone-calls", "documents", "images", "location"],
   "author": "OtoDock",

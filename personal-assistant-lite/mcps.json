@@ -8,6 +8,7 @@
     {"name": "image-gen-mcp"},
     {"name": "triggers-mcp"},
     {"name": "mcps-mcp"},
-    {"name": "agent-config-mcp"}
+    {"name": "agent-config-mcp"},
+    {"name": "memory-mcp"}
   ]
 }

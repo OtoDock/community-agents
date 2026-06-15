@@ -4,7 +4,9 @@
       "author": "OtoDock",
       "author_url": "https://github.com/OtoDock",
       "category": "productivity",
+      "collaborative": false,
       "color": "#10B981",
+      "default_scope": "user",
       "deprecated": false,
       "deprecation_note": null,
       "description": "Out-of-the-box assistant. Schedules tasks and reminders, creates and edits Office documents (docx, xlsx, pptx, PDF), generates and edits images on-device, manages files, fires webhook triggers, and coordinates multi-agent meetings. No external API keys or OAuth setup required.",
@@ -47,6 +49,9 @@
         },
         {
           "name": "agent-config-mcp"
+        },
+        {
+          "name": "memory-mcp"
         }
       ],
       "slug": "personal-assistant-lite",
@@ -65,7 +70,9 @@
       "author": "OtoDock",
       "author_url": "https://github.com/OtoDock",
       "category": "productivity",
+      "collaborative": false,
       "color": "#3B82F6",
+      "default_scope": "user",
       "deprecated": false,
       "deprecation_note": null,
       "description": "Full-feature personal assistant with Google Workspace (Gmail, Calendar, Contacts, Drive), Google Maps for places and directions, phone-call automation for restaurant/doctor/appointment bookings, document editing (docx, xlsx, pptx, PDF), image generation and editing, location awareness, and multi-agent meetings. Requires admin OAuth + API key setup (walked through by the included setup.md).",
@@ -110,6 +117,9 @@
           "name": "agent-config-mcp"
         },
         {
+          "name": "memory-mcp"
+        },
+        {
           "name": "google-workspace",
           "skills": [
             "email",
@@ -145,5 +155,5 @@
   ],
   "platform_min_version": "0.4.0",
   "registry_version": "1",
-  "updated_at": "2026-05-26T06:15:21Z"
+  "updated_at": "2026-06-15T04:16:48Z"
 }
