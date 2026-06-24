@@ -26,7 +26,6 @@ REGISTRY_PATH = REPO_ROOT / "registry.json"
 REQUIRED_AGENT_JSON_FIELDS = {"slug", "display_name", "version"}
 SLUG_REGEX = re.compile(r"^[a-z][a-z0-9-]{1,38}[a-z0-9]$")
 HEX_COLOR_REGEX = re.compile(r"^#[0-9A-Fa-f]{6}$")
-VALID_LAYERS = {"claude-code-cli", "codex", "direct-llm", "cli"}
 
 
 def _read_json(path: Path) -> dict:
@@ -50,9 +49,6 @@ def _validate_agent_json(slug_dir: Path) -> dict:
     color = data.get("color", "")
     if color and not HEX_COLOR_REGEX.fullmatch(color):
         raise ValueError(f"{slug_dir.name}: invalid color {color!r}")
-    layer = data.get("default_layer", "claude-code-cli")
-    if layer not in VALID_LAYERS:
-        raise ValueError(f"{slug_dir.name}: invalid default_layer {layer!r}")
     return data
 
 

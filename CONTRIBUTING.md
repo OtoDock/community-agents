@@ -29,9 +29,6 @@ An OtoDock agent template is a directory with one required manifest (`agent.json
   "description": "Calendar, email, and document drafting.",
   "color": "#3B82F6",
   "version": "1.0.0",
-  "default_model": "",
-  "default_layer": "claude-code-cli",
-  "execution_paths": ["claude-code-cli", "codex-cli", "direct-llm"],
   "internal": false,
   "category": "productivity",
   "tags": ["calendar", "email"],
@@ -52,9 +49,6 @@ An OtoDock agent template is a directory with one required manifest (`agent.json
 | `description` | yes | One-liner (max 160 chars). |
 | `color` | yes | Accent color (`#RRGGBB`). |
 | `version` | yes | Semver. Bump when prompt or required MCPs change. |
-| `default_model` | yes | Empty string = the platform's default. |
-| `default_layer` | yes | One of `claude-code-cli`, `codex-cli`, `direct-llm`. These are the registered layer paths in `core/session_manager._LAYERS`. Note `codex-cli` (with the `-cli` suffix), not `codex`. |
-| `execution_paths` | yes | Non-empty subset of the above. Must include `default_layer`. **Order matters at install time**: `execution_paths[0]` becomes the primary default — keep your `default_layer` first. |
 | `internal` | no | Always `false` for community templates. |
 | `category` | no | `productivity` / `infrastructure` / `creative` / `research` / `customer-support` / `experimental`. |
 | `tags` | no | Lowercase, searchable. |
@@ -63,6 +57,13 @@ An OtoDock agent template is a directory with one required manifest (`agent.json
 | `license` | no | SPDX identifier. |
 | `platform_min_version` | no | Minimum platform version for compat. |
 | `default_for_new_users` | no | Object `{enabled: bool, role: "viewer"\|"editor"\|"manager"}`. When `enabled` is `true`, the OtoDock platform attaches every newly-signed-up user to this agent with the chosen per-agent role. Platform admins can override the manifest choice per-install via the agent's Setup tab. Most templates should leave this unset; only set it if your agent is designed to be a default-baseline experience for every user. Recommended role: `"viewer"` for personal-assistant-style templates (read-only on the shared workspace, writable in the user's own dir), `"editor"` for templates with a shared knowledge base the team is meant to contribute to, `"manager"` only for templates where every user is expected to administer the agent. |
+
+> **Manifests are engine-agnostic.** Don't pin an AI engine or model — there is
+> no `default_layer` / `execution_paths` / `default_model` field. At install time
+> the platform auto-enables the first engine connected on both the platform and
+> the installer's account (Claude Code CLI, then Codex CLI), and the model
+> defaults to Auto. The installer can change the engine afterwards in the agent's
+> Config tab.
 
 ## `mcps.json`
 
