@@ -122,10 +122,17 @@
         {
           "name": "google-workspace",
           "skills": [
-            "email",
-            "calendar",
-            "contacts",
-            "drive"
+            "Gmail",
+            "Drive",
+            "Calendar",
+            "Docs",
+            "Sheets",
+            "Slides",
+            "Forms",
+            "Google Tasks",
+            "Contacts",
+            "Chat",
+            "Apps Script"
           ]
         },
         {
@@ -155,5 +162,5 @@
   ],
   "platform_min_version": "0.4.0",
   "registry_version": "1",
-  "updated_at": "2026-06-23T06:53:20Z"
+  "updated_at": "2026-06-24T09:24:25Z"
 }
