@@ -1,0 +1,14 @@
+{
+  "notifications": [
+    {
+      "slug": "monthly-workspace-cleanup",
+      "title": "Time to clean up your workspace",
+      "body": "Take a few minutes to review old files in your workspace and tidy up. Ask your assistant to help summarize stale documents.",
+      "deep_link": "/agents/{agent_slug}/workspace",
+      "scope": "user",
+      "schedule": {"type": "cron", "cron": "0 9 1 * *"},
+      "default_state": "active",
+      "auto_create_for_new_users": true
+    }
+  ]
+}

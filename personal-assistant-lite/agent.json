@@ -1,0 +1,17 @@
+{
+  "schema_version": "1",
+  "slug": "personal-assistant-lite",
+  "display_name": "Personal Assistant Lite",
+  "description": "Out-of-the-box assistant. Schedules tasks and reminders, creates and edits Office documents (docx, xlsx, pptx, PDF), manages files, remembers preferences across chats, fires webhook triggers, and coordinates multi-agent meetings. No external API keys or OAuth setup required.",
+  "color": "#10B981",
+  "version": "1.3.0",
+  "internal": false,
+  "collaborative": false,
+  "default_scope": "user",
+  "category": "productivity",
+  "tags": ["assistant", "tasks", "reminders", "documents", "memory", "meetings", "out-of-box"],
+  "author": "OtoDock",
+  "author_url": "https://github.com/OtoDock",
+  "license": "Apache-2.0",
+  "default_for_new_users": { "enabled": true, "role": "viewer" }
+}

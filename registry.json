@@ -1,0 +1,70 @@
+{
+  "agents": [
+    {
+      "author": "OtoDock",
+      "author_url": "https://github.com/OtoDock",
+      "category": "productivity",
+      "collaborative": false,
+      "color": "#10B981",
+      "default_scope": "user",
+      "deprecated": false,
+      "deprecation_note": null,
+      "description": "Out-of-the-box assistant. Schedules tasks and reminders, creates and edits Office documents (docx, xlsx, pptx, PDF), manages files, remembers preferences across chats, fires webhook triggers, and coordinates multi-agent meetings. No external API keys or OAuth setup required.",
+      "display_name": "Personal Assistant Lite",
+      "has_context": false,
+      "has_notifications": true,
+      "has_setup": false,
+      "has_tasks": false,
+      "has_triggers": false,
+      "icon_url": null,
+      "license": "Apache-2.0",
+      "long_description_url": "./personal-assistant-lite/README.md",
+      "manifest_url": "./personal-assistant-lite/agent.json",
+      "platform_min_version": "0.4.0",
+      "readme_url": "./personal-assistant-lite/README.md",
+      "required_mcps": [
+        {
+          "name": "schedules-mcp"
+        },
+        {
+          "name": "notifications-mcp"
+        },
+        {
+          "name": "meetings-mcp"
+        },
+        {
+          "name": "display-mcp"
+        },
+        {
+          "name": "file-tools"
+        },
+        {
+          "name": "triggers-mcp"
+        },
+        {
+          "name": "mcps-mcp"
+        },
+        {
+          "name": "agent-config-mcp"
+        },
+        {
+          "name": "memory-mcp"
+        }
+      ],
+      "slug": "personal-assistant-lite",
+      "tags": [
+        "assistant",
+        "tasks",
+        "reminders",
+        "documents",
+        "memory",
+        "meetings",
+        "out-of-box"
+      ],
+      "version": "1.3.0"
+    }
+  ],
+  "platform_min_version": "0.4.0",
+  "registry_version": "1",
+  "updated_at": "2026-07-06T14:40:44Z"
+}
