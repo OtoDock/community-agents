@@ -68,17 +68,58 @@ def _validate_mcps_json(slug_dir: Path) -> list[dict]:
     return required
 
 
-def _require_prompt_and_readme(slug_dir: Path) -> None:
-    for fn in ("prompt.md", "README.md"):
-        if not (slug_dir / fn).is_file():
-            raise ValueError(f"{slug_dir.name}: missing {fn}")
+def _validate_skills_json(slug_dir: Path) -> list[dict]:
+    p = slug_dir / "skills.json"
+    if not p.is_file():
+        return []
+    data = _read_json(p)
+    required = data.get("required") or []
+    if not isinstance(required, list):
+        raise ValueError(f"{slug_dir.name}: skills.json 'required' must be a list")
+    for idx, raw in enumerate(required):
+        if not isinstance(raw, dict) or not raw.get("name"):
+            raise ValueError(
+                f"{slug_dir.name}: skills.json required[{idx}] must have a name"
+            )
+    return required
+
+
+def _require_persona_and_readme(slug_dir: Path, deprecated: bool) -> None:
+    """Persona-file transition rule (platform 1.4 renamed prompt.md →
+    agent.md): non-deprecated templates ship BOTH names, byte-identical —
+    pre-1.4 platforms hard-require prompt.md while 1.4+ prefers agent.md.
+    Deprecated (frozen) templates only need the name their era used.
+    Drop the dual requirement once pre-1.4 installs stop mattering."""
+    if not (slug_dir / "README.md").is_file():
+        raise ValueError(f"{slug_dir.name}: missing README.md")
+    agent_md = slug_dir / "agent.md"
+    prompt_md = slug_dir / "prompt.md"
+    if deprecated:
+        if not (agent_md.is_file() or prompt_md.is_file()):
+            raise ValueError(f"{slug_dir.name}: missing persona file")
+        return
+    for f in (agent_md, prompt_md):
+        if not f.is_file():
+            raise ValueError(
+                f"{slug_dir.name}: missing {f.name} (non-deprecated templates "
+                "ship agent.md AND prompt.md, byte-identical, during the "
+                "1.3.x transition)"
+            )
+    if agent_md.read_bytes() != prompt_md.read_bytes():
+        raise ValueError(
+            f"{slug_dir.name}: agent.md and prompt.md differ — they must be "
+            "byte-identical copies"
+        )
 
 
 def _summarize(slug_dir: Path) -> dict:
     """Build one registry entry from one template directory."""
     agent_json = _validate_agent_json(slug_dir)
     required_mcps = _validate_mcps_json(slug_dir)
-    _require_prompt_and_readme(slug_dir)
+    required_skills = _validate_skills_json(slug_dir)
+    _require_persona_and_readme(
+        slug_dir, bool(agent_json.get("deprecated", False)),
+    )
     return {
         "slug": agent_json["slug"],
         "display_name": agent_json["display_name"],
@@ -101,10 +142,12 @@ def _summarize(slug_dir: Path) -> dict:
         "readme_url": f"./{slug_dir.name}/README.md",
         "manifest_url": f"./{slug_dir.name}/agent.json",
         "required_mcps": required_mcps,
+        "required_skills": required_skills,
         "has_triggers": (slug_dir / "triggers.json").is_file(),
         "has_tasks": (slug_dir / "tasks.json").is_file(),
         "has_notifications": (slug_dir / "notifications.json").is_file(),
         "has_setup": (slug_dir / "setup.md").is_file(),
+        "has_user_setup": (slug_dir / "user-setup.md").is_file(),
         "has_context": (slug_dir / "context").is_dir(),
         "platform_min_version": agent_json.get("platform_min_version", "0.4.0"),
         "deprecated": bool(agent_json.get("deprecated", False)),

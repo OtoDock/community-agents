@@ -9,9 +9,22 @@
   "collaborative": false,
   "default_scope": "user",
   "category": "productivity",
-  "tags": ["assistant", "tasks", "reminders", "documents", "memory", "meetings", "out-of-box"],
+  "tags": [
+    "assistant",
+    "tasks",
+    "reminders",
+    "documents",
+    "memory",
+    "meetings",
+    "out-of-box"
+  ],
   "author": "OtoDock",
   "author_url": "https://github.com/OtoDock",
   "license": "Apache-2.0",
-  "default_for_new_users": { "enabled": true, "role": "viewer" }
+  "default_for_new_users": {
+    "enabled": true,
+    "role": "viewer"
+  },
+  "deprecated": true,
+  "deprecation_note": "Renamed to personal-assistant \u2014 install that instead."
 }

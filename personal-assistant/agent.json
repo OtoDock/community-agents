@@ -1,0 +1,27 @@
+{
+  "schema_version": "1",
+  "slug": "personal-assistant",
+  "display_name": "Personal Assistant",
+  "description": "The default OtoDock assistant. Scheduling and reminders, office documents (docx, xlsx, pptx, PDF), file management, persistent memory, webhook automations, and multi-agent meetings \u2014 no API keys or OAuth needed. Includes a short per-user onboarding, and grows with any tools you add from the community catalog.",
+  "color": "#10B981",
+  "version": "2.0.0",
+  "internal": false,
+  "collaborative": false,
+  "default_scope": "user",
+  "category": "productivity",
+  "tags": [
+    "assistant",
+    "documents",
+    "reminders",
+    "memory",
+    "meetings"
+  ],
+  "author": "OtoDock",
+  "author_url": "https://github.com/OtoDock",
+  "license": "Apache-2.0",
+  "default_for_new_users": {
+    "enabled": true,
+    "role": "viewer"
+  },
+  "platform_min_version": "1.4.0"
+}

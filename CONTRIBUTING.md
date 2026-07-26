@@ -1,19 +1,22 @@
 # Contributing an agent template
 
-An OtoDock agent template is a directory with one required manifest (`agent.json`), one system prompt (`prompt.md`), a required-MCPs declaration (`mcps.json`), and a README. Optional files seed scheduled tasks, webhook triggers, scheduled notifications, a setup guide, and auto-context files.
+An OtoDock agent template is a directory with one required manifest (`agent.json`), one persona (`agent.md` — plus a byte-identical `prompt.md` copy during the pre-1.4 transition), a required-MCPs declaration (`mcps.json`), and a README. Optional files seed scheduled tasks, webhook triggers, scheduled notifications, standalone skill packages, setup guides (agent-wide and per-user), and auto-context files.
 
 ## Folder layout
 
 ```
 <slug>/
 ├── agent.json              # required — agent manifest
-├── prompt.md               # required — agent system prompt (becomes config/prompt.md)
+├── agent.md                # required — the persona (becomes config/agent.md)
+├── prompt.md               # required for now — byte-identical copy of agent.md (pre-1.4 platforms read this name)
+├── skills.json             # optional — standalone skill packages: {"required": [{"name", "skills"?}]}
 ├── mcps.json               # required — required MCPs (with optional skill lists)
 ├── README.md               # required — shown in the Browse Agents detail dialog
 ├── tasks.json              # optional — scheduled tasks (cron / interval)
 ├── triggers.json           # optional — webhook-fired triggers
 ├── notifications.json      # optional — scheduled user-facing notifications
-├── setup.md                # optional — copied to config/context/setup.md; agent removes via complete_setup
+├── setup.md                # optional — agent-wide setup guide, copied to config/context/setup.md; a manager completes it once via complete_setup
+├── user-setup.md           # optional — per-user onboarding, copied to config/user-setup.md and seeded into each user's context/ on attach; each user completes it via complete_setup(scope="user")
 ├── context/                # optional — auto-loaded into config/context/
 │   └── *.md / *.txt
 └── icon.png                # optional — 256×256 PNG; falls back to color + first letter
@@ -163,6 +166,14 @@ Same shape as tasks but no `schedule` field — triggers fire via webhook. Defau
 ## `setup.md` (optional)
 
 A markdown file that walks the manager through post-install configuration (OAuth flows, API keys, etc.). Copied to the new agent's `config/context/setup.md` so it auto-loads into the agent's context. When configuration is verified done, the manager tells the agent "setup is complete" and the agent calls its `complete_setup` tool (from `agent-config-mcp`) which deletes the file. Subsequent chat turns no longer pay the token cost.
+
+## `user-setup.md` (optional — platform 1.4+)
+
+Per-user onboarding. Copied to `config/user-setup.md` at install and seeded into each user's `users/{u}/context/` when they are attached to the agent — so it auto-loads only into that user's own chats. The agent walks each user through it and calls `complete_setup` with scope `user`, which removes only that user's copy. Platforms before 1.4 ignore this file.
+
+## `skills.json` (optional — platform 1.4+)
+
+Standalone skill packages from [OtoDock/community-skills](https://github.com/OtoDock/community-skills), installed and assigned to the agent at install time — same shape as `mcps.json`: `{"required": [{"name": "theme-factory", "skills": ["theme-factory"]}]}` (omit `skills` to enable all of a package's skills). Skill-package installs are admin-only: manager-driven template installs fail preflight with an ask-an-admin message when a required package isn't installed yet. Platforms before 1.4 ignore this file.
 
 ## `context/` (optional)
 

@@ -9,6 +9,69 @@
       "default_scope": "user",
       "deprecated": false,
       "deprecation_note": null,
+      "description": "The default OtoDock assistant. Scheduling and reminders, office documents (docx, xlsx, pptx, PDF), file management, persistent memory, webhook automations, and multi-agent meetings \u2014 no API keys or OAuth needed. Includes a short per-user onboarding, and grows with any tools you add from the community catalog.",
+      "display_name": "Personal Assistant",
+      "has_context": false,
+      "has_notifications": true,
+      "has_setup": false,
+      "has_tasks": false,
+      "has_triggers": false,
+      "has_user_setup": true,
+      "icon_url": null,
+      "license": "Apache-2.0",
+      "long_description_url": "./personal-assistant/README.md",
+      "manifest_url": "./personal-assistant/agent.json",
+      "platform_min_version": "1.4.0",
+      "readme_url": "./personal-assistant/README.md",
+      "required_mcps": [
+        {
+          "name": "schedules-mcp"
+        },
+        {
+          "name": "notifications-mcp"
+        },
+        {
+          "name": "meetings-mcp"
+        },
+        {
+          "name": "display-mcp"
+        },
+        {
+          "name": "file-tools"
+        },
+        {
+          "name": "triggers-mcp"
+        },
+        {
+          "name": "mcps-mcp"
+        },
+        {
+          "name": "agent-config-mcp"
+        },
+        {
+          "name": "memory-mcp"
+        }
+      ],
+      "required_skills": [],
+      "slug": "personal-assistant",
+      "tags": [
+        "assistant",
+        "documents",
+        "reminders",
+        "memory",
+        "meetings"
+      ],
+      "version": "2.0.0"
+    },
+    {
+      "author": "OtoDock",
+      "author_url": "https://github.com/OtoDock",
+      "category": "productivity",
+      "collaborative": false,
+      "color": "#10B981",
+      "default_scope": "user",
+      "deprecated": true,
+      "deprecation_note": "Renamed to personal-assistant \u2014 install that instead.",
       "description": "Out-of-the-box assistant. Schedules tasks and reminders, creates and edits Office documents (docx, xlsx, pptx, PDF), manages files, remembers preferences across chats, fires webhook triggers, and coordinates multi-agent meetings. No external API keys or OAuth setup required.",
       "display_name": "Personal Assistant Lite",
       "has_context": false,
@@ -16,6 +79,7 @@
       "has_setup": false,
       "has_tasks": false,
       "has_triggers": false,
+      "has_user_setup": false,
       "icon_url": null,
       "license": "Apache-2.0",
       "long_description_url": "./personal-assistant-lite/README.md",
@@ -51,6 +115,7 @@
           "name": "memory-mcp"
         }
       ],
+      "required_skills": [],
       "slug": "personal-assistant-lite",
       "tags": [
         "assistant",
@@ -66,5 +131,5 @@
   ],
   "platform_min_version": "0.4.0",
   "registry_version": "1",
-  "updated_at": "2026-07-06T14:40:44Z"
+  "updated_at": "2026-07-26T03:30:54Z"
 }
