@@ -1,6 +1,6 @@
 # Contributing an agent template
 
-An OtoDock agent template is a directory with one required manifest (`agent.json`), one persona (`agent.md` — plus a byte-identical `prompt.md` copy during the pre-1.4 transition), a required-MCPs declaration (`mcps.json`), and a README. Optional files seed scheduled tasks, webhook triggers, scheduled notifications, standalone skill packages, setup guides (agent-wide and per-user), and auto-context files.
+An OtoDock agent template is a directory with one required manifest (`agent.json`), one persona (`agent.md` — plus a byte-identical `prompt.md` copy during the pre-1.4 transition), a required-MCPs declaration (`mcps.json`), and a README. Optional files seed scheduled tasks, webhook triggers, scheduled notifications, standalone skill packages, ready-made mini-app dashboards, setup guides (agent-wide and per-user), and auto-context files.
 
 ## Folder layout
 
@@ -17,6 +17,9 @@ An OtoDock agent template is a directory with one required manifest (`agent.json
 ├── notifications.json      # optional — scheduled user-facing notifications
 ├── setup.md                # optional — agent-wide setup guide, copied to config/context/setup.md; a manager completes it once via complete_setup
 ├── user-setup.md           # optional — per-user onboarding, copied to config/user-setup.md and seeded into each user's context/ on attach; each user completes it via complete_setup(scope="user")
+├── dashboards.json         # optional (platform 1.5+) — mini-app dashboards to seed + pin at install
+├── dashboards/             # optional (platform 1.5+) — the dashboards' *.html files
+│   └── *.html
 ├── context/                # optional — auto-loaded into config/context/
 │   └── *.md / *.txt
 └── icon.png                # optional — 256×256 PNG; falls back to color + first letter
@@ -162,7 +165,41 @@ Same shape as tasks but no `schedule` field — triggers fire via webhook. Defau
 }
 ```
 
-`title` max 80 chars; `body` max 500 chars. `{agent_slug}` substitution supported in `deep_link`.
+`title` max 80 chars; `body` max 500 chars. `{agent_slug}` substitution supported in `deep_link`. The `schedule` block takes the same three types as tasks (`cron` / `interval` / `run_at`), and notifications also accept the per-user targeting fields tasks have: `auto_create_for_new_users` (default `true`, `scope=user` only) and `roles` (e.g. `["manager"]` to seed only for users holding those per-agent roles).
+
+## `dashboards.json` (optional — platform 1.5+)
+
+Ship a ready-made **mini-app dashboard** with your agent — pinned and visible the moment the install finishes, refreshable later by the agent's own scheduled tasks.
+
+```json
+{
+  "dashboards": [
+    {
+      "slug": "team-board",
+      "title": "Team Board",
+      "file": "board.html",
+      "visibility": "agent",
+      "auto_pin_for_new_users": true
+    }
+  ]
+}
+```
+
+| Field | Required | Description |
+|---|---|---|
+| `slug` | yes | 1–40 chars of `[a-z0-9-]`, starting alphanumeric — the pinned app's identity (re-pins by the agent update it in place). |
+| `title` | no | Tab title shown to users. Defaults to the slug. |
+| `file` | yes | Bare `*.html` filename under `dashboards/` (no subpaths). |
+| `visibility` | no | `"agent"` (default): ONE shared dashboard every user of the installed agent sees. `"user"`: each user gets their own personal copy. Must be a visibility the template's **mode** offers — an `"agent"` dashboard on a Personal-only template (`collaborative: false` + `default_scope: "user"`) fails validation, as does `"user"` on Shared-only. |
+| `auto_pin_for_new_users` | no | Default `true`. For `"user"` visibility: users attached to the agent **after** install also get their copy pinned automatically. |
+
+Rules and behavior:
+
+- **At most 4 dashboards per template, ≤1 MB each.** `{agent_slug}` in the HTML is substituted with the installed agent's slug.
+- **Display-only on day one.** Seeded dashboards carry no action buttons, so there is nothing for the user to approve at install. The installed agent can later re-pin the same slug with a declared-actions manifest (buttons, live data feeds) — that re-pin then goes through the normal user-approval flow.
+- **Who gets what**: `"agent"` visibility seeds one shared pin + the file in the agent's shared `workspace/apps/`; `"user"` visibility seeds the installer's personal copy immediately and each later joiner's copy on attach. Users can always hide a shared dashboard from their own strip without affecting the team.
+- **Authoring**: the HTML renders in the same sandboxed iframe as agent-pinned mini-apps — self-contained body fragment, **Tailwind + mobile-responsive layout required** (dashboards are seen daily on phones). No external network access from the sandbox; keep assets inline.
+- Platforms before 1.5 ignore `dashboards.json` entirely (their loader drops unknown files), so a template that ships dashboards still installs cleanly on older installs — just without the pins.
 
 ## `setup.md` (optional)
 
