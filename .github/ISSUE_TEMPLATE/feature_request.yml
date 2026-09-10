@@ -1,0 +1,30 @@
+name: New agent template or improvement
+description: Propose an agent template for the catalog, or a change to one that is already in it.
+labels: ["enhancement"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Building it yourself? `CONTRIBUTING.md` has the folder layout and the
+        manifest reference, and a pull request is welcome without an issue
+        first.
+  - type: input
+    id: entry
+    attributes:
+      label: Agent template
+      description: The slug of an existing template, or a working name for a new one.
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What the agent should do
+      description: Its job, who would use it, and the MCP servers it needs (from the community-mcps catalog or the platform's bundled ones).
+    validations:
+      required: true
+  - type: checkboxes
+    id: contribute
+    attributes:
+      label: Contribution
+      options:
+        - label: I would like to contribute it (CONTRIBUTING.md).

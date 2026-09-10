@@ -8,10 +8,11 @@ A pre-built agent: prompt, MCP requirements, optional scheduled tasks, optional 
 
 ## Available agents
 
-| Slug | Description |
-|---|---|
-| `personal-assistant` | The default assistant — tasks, reminders, documents, memory, meetings. No external API keys. Ships bundled with OtoDock; also installable from this catalog for re-deployment or extra copies. |
-| `personal-assistant-lite` | Deprecated — renamed to `personal-assistant`. Kept for pre-1.4 installs. |
+<!-- catalog:start -->
+| Template | Version | What it is |
+|----------|---------|------------|
+| [personal-assistant](./personal-assistant/) | 2.0.0 | The default OtoDock assistant |
+<!-- catalog:end -->
 
 ## Adding a new template
 

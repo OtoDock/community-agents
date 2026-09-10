@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Question or help with an install
+    url: https://github.com/OtoDock/oto-dock/discussions/categories/q-a
+    about: Ask in the platform's Discussions. Bug reports and proposals for catalog entries stay here as issues.
+  - name: Bug in the OtoDock platform
+    url: https://github.com/OtoDock/oto-dock/issues/new/choose
+    about: The proxy, the dashboard, remote machines and the phone service live in the platform repository.
+  - name: Security vulnerability
+    url: https://github.com/OtoDock/community-agents/security/advisories/new
+    about: Report it privately. A template is trusted instruction text, so a payload hidden in one matters; SECURITY.md has the scope.
