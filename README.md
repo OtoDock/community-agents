@@ -11,7 +11,7 @@ A pre-built agent: prompt, MCP requirements, optional scheduled tasks, optional 
 <!-- catalog:start -->
 | Template | Version | What it is |
 |----------|---------|------------|
-| [personal-assistant](./personal-assistant/) | 2.0.0 | The default OtoDock assistant |
+| [personal-assistant](./personal-assistant/) | 3.1.2 | Your everyday assistant, ready out of the box |
 <!-- catalog:end -->
 
 ## Adding a new template

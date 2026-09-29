@@ -1,21 +1,80 @@
 {
   "agents": [
     {
+      "apps": [
+        {
+          "app_json": {
+            "actions": [
+              {
+                "id": "me",
+                "label": "Who is viewing",
+                "method": "viewer.me",
+                "type": "platform"
+              },
+              {
+                "id": "setup",
+                "label": "Setup state",
+                "method": "setup.status",
+                "type": "platform"
+              },
+              {
+                "id": "done",
+                "label": "Finish setup",
+                "method": "setup.complete",
+                "type": "platform"
+              },
+              {
+                "feed": "file_changes",
+                "id": "files",
+                "label": "Setup completed in a chat",
+                "type": "data_feed"
+              }
+            ],
+            "egress": [
+              "api.open-meteo.com",
+              "geocoding-api.open-meteo.com"
+            ],
+            "requires": {
+              "mcps": [
+                "schedules-mcp",
+                "notifications-mcp",
+                "file-tools",
+                "memory-mcp",
+                "meetings-mcp",
+                "triggers-mcp",
+                "mcps-mcp"
+              ]
+            },
+            "title": "Home"
+          },
+          "blueprint_json": null,
+          "owner_approval": false,
+          "sig": "42809c543d4eb24aade08dc8fe6da93d93ab7f8792185f20b48ce6e3056a33bb",
+          "slug": "home",
+          "title": "Home",
+          "tree_sha": "6dec4ef669a4332cefd39a761972f538b373020a7b3048e1c5668828db5f1650",
+          "visibility": "user"
+        }
+      ],
       "author": "OtoDock",
       "author_url": "https://github.com/OtoDock",
       "category": "productivity",
+      "checks": [],
       "collaborative": false,
       "color": "#10B981",
       "default_scope": "user",
       "deprecated": false,
       "deprecation_note": null,
-      "description": "The default OtoDock assistant. Scheduling and reminders, office documents (docx, xlsx, pptx, PDF), file management, persistent memory, webhook automations, and multi-agent meetings \u2014 no API keys or OAuth needed. Includes a short per-user onboarding, and grows with any tools you add from the community catalog.",
+      "description": "Your everyday assistant, ready out of the box. It handles your schedule and reminders, writes and reads office documents, manages files, remembers what matters to you, runs webhook automations and can meet with other assistants. You can also add more tools from the community catalog or create your own apps.",
       "display_name": "Personal Assistant",
-      "has_context": false,
+      "has_apps": false,
+      "has_checks": false,
+      "has_context": true,
       "has_notifications": true,
       "has_setup": false,
       "has_tasks": false,
       "has_triggers": false,
+      "has_user_apps": true,
       "has_user_setup": true,
       "icon_url": null,
       "license": "Apache-2.0",
@@ -61,10 +120,10 @@
         "memory",
         "meetings"
       ],
-      "version": "2.0.0"
+      "version": "3.1.2"
     }
   ],
   "platform_min_version": "0.4.0",
   "registry_version": "1",
-  "updated_at": "2026-09-10T22:31:38Z"
+  "updated_at": "2026-09-29T15:36:09Z"
 }

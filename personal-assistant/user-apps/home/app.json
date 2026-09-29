@@ -1,0 +1,44 @@
+{
+  "title": "Home",
+  "egress": [
+    "api.open-meteo.com",
+    "geocoding-api.open-meteo.com"
+  ],
+  "requires": {
+    "mcps": [
+      "schedules-mcp",
+      "notifications-mcp",
+      "file-tools",
+      "memory-mcp",
+      "meetings-mcp",
+      "triggers-mcp",
+      "mcps-mcp"
+    ]
+  },
+  "actions": [
+    {
+      "id": "me",
+      "label": "Who is viewing",
+      "type": "platform",
+      "method": "viewer.me"
+    },
+    {
+      "id": "setup",
+      "label": "Setup state",
+      "type": "platform",
+      "method": "setup.status"
+    },
+    {
+      "id": "done",
+      "label": "Finish setup",
+      "type": "platform",
+      "method": "setup.complete"
+    },
+    {
+      "id": "files",
+      "label": "Setup completed in a chat",
+      "type": "data_feed",
+      "feed": "file_changes"
+    }
+  ]
+}

@@ -1,0 +1,607 @@
+<script src="/ui-kit/tailwind.js"></script>
+<style>
+  .home { color: var(--p-text); }
+  .muted { color: var(--p-text-secondary); }
+  .rowline { border-bottom: 1px solid var(--p-border-light); }
+  .rowline:last-child { border-bottom: none; }
+  .sk { background: var(--p-border-light); border-radius: 6px; animation: pulse 1.4s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: .45 } 50% { opacity: .9 } }
+  .field {
+    background: var(--p-surface); border: 1px solid var(--p-border); color: var(--p-text);
+    border-radius: .6rem; padding: .55rem .8rem; font-size: .95rem; min-height: 2.6rem; width: 100%;
+  }
+  .iconbtn {
+    min-width: 2.5rem; min-height: 2.5rem; display: inline-flex; align-items: center; justify-content: center;
+    border-radius: .5rem; color: var(--p-text-secondary); font-size: 1rem; line-height: 1;
+  }
+  .iconbtn:hover { background: var(--p-border-light); color: var(--p-text); }
+  .iconbtn:disabled { opacity: .35; }
+  .iconbtn:disabled:hover { background: transparent; color: var(--p-text-secondary); }
+  .check {
+    width: 1.5rem; height: 1.5rem; border-radius: 999px; border: 2px solid var(--p-border);
+    display: inline-flex; align-items: center; justify-content: center; flex: none; background: var(--p-surface);
+  }
+  .check.on { background: var(--p-primary); border-color: var(--p-primary); color: #fff; }
+  .field:focus-visible, .btn:focus-visible, .iconbtn:focus-visible, .check-btn:focus-visible {
+    outline: 2px solid var(--p-primary); outline-offset: 2px;
+  }
+  .tile { background: var(--p-surface-alt, var(--p-surface)); border: 1px solid var(--p-border-light); border-radius: .75rem; }
+  .day { text-align: center; padding: .5rem .25rem; border-radius: .6rem; background: var(--p-surface-alt, var(--p-surface)); }
+  .cap svg { width: 1.6rem; height: 1.6rem; stroke: var(--p-primary); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+  /* A card whose tool is missing: greyed, with what would fix it under the body. */
+  .cap.off { opacity: .62; }
+  .cap.off svg { stroke: var(--p-text-secondary); }
+  .cap .fix { font-size: .8rem; margin-top: .45rem; color: var(--p-text-secondary); }
+  .cap .fix button { color: var(--p-primary); text-decoration: underline; text-align: left; }
+  /* The welcome: the mark draws itself, then settles; the rest rises after it. */
+  .mark { display: block; transform-origin: 50% 60%; animation: settle .7s cubic-bezier(.2, .8, .2, 1) 1.15s both; }
+  .mark .line { stroke: var(--p-primary); stroke-width: 3; fill: none; stroke-linecap: round; stroke-linejoin: round;
+                stroke-dasharray: 220; stroke-dashoffset: 220; animation: draw 1s ease-out forwards; }
+  .mark .door { animation-delay: .45s; }
+  .mark .sun { fill: var(--p-primary); opacity: 0; transform-origin: 50px 14px; animation: appear .4s ease-out .95s forwards; }
+  @keyframes draw { to { stroke-dashoffset: 0 } }
+  @keyframes appear { from { opacity: 0; transform: scale(.4) } to { opacity: 1; transform: scale(1) } }
+  @keyframes settle { from { transform: scale(1.35) translateY(18px) } to { transform: scale(1) translateY(0) } }
+  .rise { opacity: 0; transform: translateY(10px); animation: rise .55s ease-out forwards; }
+  @keyframes rise { to { opacity: 1; transform: none } }
+  .leaving { transition: opacity .25s ease; opacity: 0; }
+  .arriving { animation: fadein .3s ease-out; }
+  @keyframes fadein { from { opacity: 0 } to { opacity: 1 } }
+  @media (prefers-reduced-motion: reduce) {
+    .mark, .mark .sun { animation: none; opacity: 1; transform: none; }
+    .mark .line { animation: none; stroke-dashoffset: 0; }
+    .rise { animation: fadein .3s ease-out forwards; transform: none; }
+    .sk { animation: none; }
+  }
+</style>
+
+<div class="home w-full">
+
+  <!-- ===== the welcome: shown while the member's setup is pending ===== -->
+  <section id="welcome" hidden>
+    <div class="max-w-3xl mx-auto px-2 py-6 sm:py-10 text-center">
+      <svg class="mark mx-auto" width="92" height="92" viewBox="0 0 64 64" aria-hidden="true">
+        <path class="line" d="M10 31 L32 11 L54 31 M16 26 V52 H48 V26"/>
+        <path class="line door" d="M27 52 V39 H37 V52"/>
+        <circle class="sun" cx="50" cy="14" r="4"/>
+      </svg>
+      <h1 class="rise text-2xl sm:text-3xl font-semibold mt-4" id="w-title" style="animation-delay:1.25s">Welcome</h1>
+      <p class="rise muted mt-2 text-base" id="w-sub" style="animation-delay:1.35s">Your personal assistant is ready. Here is what it can do for you today.</p>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 mt-6 text-left" id="caps"></div>
+      <div class="mt-7 rise" style="animation-delay:1.9s">
+        <button class="btn primary text-base px-14 py-3 min-w-[14rem]" id="w-setup">Set up</button>
+        <p id="w-err" class="text-sm mt-2" style="color:var(--p-danger, #dc2626)" hidden></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== the page ===== -->
+  <section id="home" hidden>
+    <div class="max-w-3xl mx-auto px-1 sm:px-2 py-2 space-y-3">
+      <header class="flex items-end justify-between gap-2 flex-wrap">
+        <div class="min-w-0 flex items-center gap-3">
+          <svg class="shrink-0" width="34" height="34" viewBox="0 0 64 64" aria-hidden="true" style="stroke:var(--p-primary);fill:none;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round">
+            <path d="M10 31 L32 11 L54 31 M16 26 V52 H48 V26"/><path d="M27 52 V39 H37 V52"/>
+            <circle cx="50" cy="14" r="4" style="fill:var(--p-primary);stroke:none"/>
+          </svg>
+          <div class="min-w-0">
+            <h1 class="text-xl sm:text-2xl font-semibold leading-tight truncate" id="hello">Home</h1>
+            <p class="muted text-sm" id="dateline"></p>
+          </div>
+        </div>
+        <span class="muted text-sm" id="stamp"></span>
+      </header>
+
+      <div class="card" id="wx-card">
+        <div class="flex items-start justify-between gap-2">
+          <h2 class="font-semibold text-base" id="wx-title">Weather</h2>
+          <button class="btn" id="wx-change" hidden>Change</button>
+        </div>
+        <div id="wx-body" class="mt-2"><div class="sk h-24 w-full"></div></div>
+      </div>
+
+      <div class="card" id="todo-card">
+        <div class="flex items-center justify-between gap-2">
+          <h2 class="font-semibold text-base">To-do</h2>
+          <span class="muted text-sm" id="todo-count" aria-live="polite"></span>
+        </div>
+        <div class="flex gap-2 mt-3" id="todo-add-row">
+          <label class="sr-only" for="todo-in">Add something to do</label>
+          <input id="todo-in" class="field" maxlength="500" placeholder="Add something to do, press Enter" autocomplete="off">
+          <button class="btn primary" id="todo-add">Add</button>
+        </div>
+        <p id="todo-err" class="text-sm mt-2" style="color:var(--p-danger, #dc2626)" hidden></p>
+        <div id="todo-body" class="mt-2"><div class="sk h-16 w-full"></div></div>
+        <div id="done-wrap" class="mt-3" hidden>
+          <div class="flex items-center justify-between gap-2">
+            <button class="btn" id="done-toggle" aria-expanded="false">Done (0)</button>
+            <button class="btn" id="done-clear" hidden>Clear done</button>
+          </div>
+          <div id="done-body" class="mt-2" hidden></div>
+        </div>
+      </div>
+
+      <p class="muted text-sm text-center pt-1 pb-2" id="foot">Ask your assistant to change this page.</p>
+    </div>
+  </section>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var S = { mode: "", viewer: null, settings: null, weather: null, todos: [], canEdit: true,
+            fetchedAt: 0, showDone: false, editing: null, busy: false, agent: "", mcps: null };
+  var REFRESH_MS = 30 * 60 * 1000;
+  var $ = function (id) { return document.getElementById(id); };
+  var esc = function (s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  };
+
+  var WMO = {
+    0: ["☀️", "Clear"], 1: ["🌤️", "Mainly clear"], 2: ["⛅", "Partly cloudy"], 3: ["☁️", "Overcast"],
+    45: ["🌫️", "Fog"], 48: ["🌫️", "Rime fog"], 51: ["🌦️", "Light drizzle"], 53: ["🌦️", "Drizzle"],
+    55: ["🌦️", "Dense drizzle"], 56: ["🌧️", "Freezing drizzle"], 57: ["🌧️", "Freezing drizzle"],
+    61: ["🌧️", "Light rain"], 63: ["🌧️", "Rain"], 65: ["🌧️", "Heavy rain"], 66: ["🌧️", "Freezing rain"],
+    67: ["🌧️", "Freezing rain"], 71: ["🌨️", "Light snow"], 73: ["🌨️", "Snow"], 75: ["🌨️", "Heavy snow"],
+    77: ["🌨️", "Snow grains"], 80: ["🌦️", "Showers"], 81: ["🌦️", "Showers"], 82: ["⛈️", "Violent showers"],
+    85: ["🌨️", "Snow showers"], 86: ["🌨️", "Snow showers"], 95: ["⛈️", "Thunderstorm"],
+    96: ["⛈️", "Thunderstorm, hail"], 99: ["⛈️", "Thunderstorm, hail"]
+  };
+  var wmo = function (c, night) {
+    var w = WMO[c] || ["🌡️", "—"];
+    return night && (c === 0 || c === 1) ? ["🌙", w[1]] : w;
+  };
+
+  // Title, body, icon, and the MCPs the card relies on (named in app.json's
+  // requires.mcps): setup.status grades each, and a card whose tool is
+  // missing greys out with the fix under it. The last card names none.
+  var CAPS = [
+    ["Reminders and schedules", "Tell it what to remember and it reminds you. It also runs whatever you put on a schedule.",
+     '<path d="M12 6v6l4 2"/><circle cx="12" cy="12" r="9"/>', ["schedules-mcp", "notifications-mcp"]],
+    ["Documents", "It writes, edits and reads Word, Excel, PowerPoint and PDF files for you.",
+     '<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>', ["file-tools"]],
+    ["Memory", "It learns how you like things and keeps track of people, places and routines.",
+     '<path d="M12 4a4 4 0 0 0-4 4v1a3 3 0 0 0-2 5 3 3 0 0 0 2 5h8a3 3 0 0 0 2-5 3 3 0 0 0-2-5V8a4 4 0 0 0-4-4z"/><path d="M12 4v15"/>', ["memory-mcp"]],
+    ["Meetings", "It can meet with other assistants and work through a question together.",
+     '<circle cx="9" cy="8" r="3"/><circle cx="17" cy="9" r="2.5"/><path d="M3 20a6 6 0 0 1 12 0M14 20a4.5 4.5 0 0 1 7 0"/>', ["meetings-mcp"]],
+    ["Automations", "Another system can wake it with a webhook and set work in motion.",
+     '<path d="M13 3 4 14h7l-1 7 9-11h-7z"/>', ["triggers-mcp"]],
+    ["And whatever you add", "Mail, calendars, maps, a browser or a smart home. Tools from the catalog plug right in.",
+     '<path d="M12 5v14M5 12h14"/>', []]
+  ];
+
+  // The assistant by name once setup.status has said it; "your assistant"
+  // on a platform that does not say (before 1.7).
+  function who() { return S.agent || "your assistant"; }
+  function cap1(s) { s = String(s || ""); return s.charAt(0).toUpperCase() + s.slice(1); }
+  function nameAgent() {
+    var n = S.agent;
+    $("w-sub").textContent = (n ? n + " is ready." : "Your personal assistant is ready.") +
+      " Here is what it can do for you today.";
+    $("foot").textContent = "Ask " + who() + " to change this page.";
+  }
+
+  // The first missing tool of a card, or null when every one is ready.
+  function capState(c) {
+    var names = c[3] || [];
+    if (!S.mcps || !names.length) return null;
+    for (var i = 0; i < names.length; i++) {
+      var st = S.mcps[names[i]];
+      if (st && st.fix && st.fix !== "none") return st;
+    }
+    return null;
+  }
+
+  // ---------- server ----------
+  async function api(path, init) {
+    var r = await otodock.fetch(path, init);
+    var body = null;
+    try { body = await r.json(); } catch (e) { body = {}; }
+    if (!r.ok && body && !body.error) body.error = "request failed (" + r.status + ")";
+    return body || {};
+  }
+  function send(method, path, obj) {
+    return api(path, { method: method, headers: { "content-type": "application/json" }, body: JSON.stringify(obj || {}) });
+  }
+
+  // ---------- modes ----------
+  function renderCaps() {
+    var out = "";
+    CAPS.forEach(function (c, i) {
+      var st = capState(c);
+      out += '<div class="card cap rise' + (st ? " off" : "") + '" style="animation-delay:' + (1.45 + i * 0.07).toFixed(2) + 's">' +
+        '<svg viewBox="0 0 24 24" aria-hidden="true">' + c[2] + "</svg>" +
+        '<div class="font-semibold mt-2">' + esc(c[0]) + "</div>" +
+        '<div class="muted text-sm mt-1">' + esc(c[1]) + "</div>" +
+        (st ? '<div class="fix">' + (st.fix === "connect"
+          ? '<button type="button" data-connect="1">' + esc(cap1(st.reason)) + "</button>"
+          : esc(cap1(st.reason))) + "</div>" : "") +
+        "</div>";
+    });
+    $("caps").innerHTML = out;
+    $("caps").querySelectorAll("[data-connect]").forEach(function (b) {
+      b.onclick = function () {
+        try { otodock.open({ kind: "user_settings", tab: "integrations" }); } catch (e) { /* not on this view */ }
+      };
+    });
+  }
+
+  function showWelcome() {
+    S.mode = "welcome";
+    renderCaps();
+    $("home").hidden = true;
+    $("welcome").hidden = false;
+  }
+
+  function showHome(animate) {
+    if (S.mode === "home") return;
+    S.mode = "home";
+    var w = $("welcome"), h = $("home");
+    var reveal = function () {
+      w.hidden = true;
+      w.classList.remove("leaving");
+      h.hidden = false;
+      h.classList.add("arriving");
+      renderWeather();
+      renderTodos();
+    };
+    if (animate && !w.hidden) {
+      w.classList.add("leaving");
+      setTimeout(reveal, 260);
+    } else {
+      reveal();
+    }
+  }
+
+  function greet() {
+    var name = (S.viewer && S.viewer.name) || "";
+    var first = name.split(/\s+/)[0] || "";
+    var h = new Date().getHours();
+    var part = h < 5 ? "Good night" : h < 12 ? "Good morning" : h < 18 ? "Good afternoon" : "Good evening";
+    $("hello").textContent = first ? part + ", " + first : part;
+    $("w-title").textContent = first ? "Welcome, " + first : "Welcome";
+    $("dateline").textContent = new Date().toLocaleDateString(undefined, { weekday: "long", day: "numeric", month: "long" });
+  }
+
+  // ---------- weather ----------
+  function unitLabel() { return (S.settings && S.settings.units === "fahrenheit") ? "°F" : "°C"; }
+
+  function renderWeather() {
+    var host = $("wx-body"), s = S.settings, w = S.weather;
+    var hasCity = !!(s && s.city && s.lat !== null && s.lat !== undefined);
+    $("wx-change").hidden = !hasCity || !S.canEdit;
+    $("wx-title").textContent = hasCity ? s.city : "Weather";
+    if (!s) { host.innerHTML = '<div class="sk h-24 w-full"></div>'; return; }
+    if (!hasCity) {
+      if (!S.canEdit) { host.innerHTML = '<p class="muted text-sm">No city set yet.</p>'; return; }
+      renderSearch(host, false);
+      return;
+    }
+    if (!w || !w.current) {
+      host.innerHTML = '<p class="muted text-sm">The weather is not answering right now.</p>' +
+        '<button class="btn mt-2" id="wx-retry">Try again</button>';
+      $("wx-retry").onclick = function () { refreshWeather(true); };
+      $("stamp").textContent = "";
+      return;
+    }
+    var c = w.current, d = w.daily || {}, unit = unitLabel();
+    var ic = wmo(c.weather_code, c.is_day === 0);
+    var days = "", t = (d.time || []).slice(0, 6);
+    for (var i = 0; i < t.length; i++) {
+      var di = wmo((d.weather_code || [])[i]);
+      var lbl = i === 0 ? "Today" : new Date(t[i] + "T12:00:00").toLocaleDateString(undefined, { weekday: "short" });
+      var pop = (d.precipitation_probability_max || [])[i];
+      days += '<div class="day">' +
+        '<div class="muted text-sm">' + esc(lbl) + "</div>" +
+        '<div class="text-xl leading-tight" title="' + esc(di[1]) + '">' + di[0] + "</div>" +
+        '<div class="text-sm"><span class="font-semibold">' + Math.round((d.temperature_2m_max || [])[i]) + "°</span> " +
+        '<span class="muted">' + Math.round((d.temperature_2m_min || [])[i]) + "°</span></div>" +
+        (pop != null ? '<div class="muted text-sm">💧 ' + pop + "%</div>" : "") +
+        "</div>";
+    }
+    host.innerHTML =
+      '<div class="flex items-center gap-4">' +
+        '<div class="text-5xl leading-none" title="' + esc(ic[1]) + '">' + ic[0] + "</div>" +
+        '<div class="min-w-0">' +
+          '<div class="flex items-baseline gap-2">' +
+            '<span class="text-4xl font-semibold leading-none">' + Math.round(c.temperature_2m) + "°</span>" +
+            '<button class="btn" id="wx-unit" title="Switch units" ' + (S.canEdit ? "" : "hidden") + ">" + esc(unit) + "</button>" +
+          "</div>" +
+          '<div class="muted text-sm mt-1">' + esc(ic[1]) + " · feels like " + Math.round(c.apparent_temperature) + "°" +
+          (c.wind_speed_10m != null ? " · wind " + Math.round(c.wind_speed_10m) + " " + esc((w.units && w.units.wind_speed_10m) || "km/h") : "") +
+          "</div>" +
+        "</div>" +
+      "</div>" +
+      '<div class="grid grid-cols-3 sm:grid-cols-6 gap-2 mt-4">' + days + "</div>";
+    var ub = $("wx-unit");
+    if (ub) ub.onclick = function () { saveSettings({ units: S.settings.units === "fahrenheit" ? "celsius" : "fahrenheit" }); };
+    var at = w.at ? new Date(w.at) : null;
+    $("stamp").textContent = at ? (w.stale ? "last update " : "updated ") + at.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "";
+  }
+
+  function renderSearch(host, cancelable) {
+    host.innerHTML =
+      '<p class="muted text-sm">' + (cancelable ? "Which city instead?" : "Which city are you in? The weather for it goes here.") + "</p>" +
+      '<div class="flex gap-2 mt-2">' +
+        '<label class="sr-only" for="city-in">City</label>' +
+        '<input id="city-in" class="field" maxlength="80" placeholder="Search a city, press Enter" autocomplete="off">' +
+        '<button class="btn primary" id="city-go">Search</button>' +
+        (cancelable ? '<button class="btn" id="city-cancel">Cancel</button>' : "") +
+      "</div>" +
+      '<div id="city-results" class="mt-2" aria-live="polite"></div>';
+    var input = $("city-in");
+    $("city-go").onclick = citySearch;
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") { e.preventDefault(); citySearch(); }
+      if (e.key === "Escape" && cancelable) { e.preventDefault(); renderWeather(); }
+    });
+    if (cancelable) $("city-cancel").onclick = function () { renderWeather(); };
+    input.focus();
+  }
+
+  async function citySearch() {
+    var q = $("city-in").value.trim();
+    var host = $("city-results");
+    if (q.length < 2) { host.innerHTML = '<p class="muted text-sm">Type at least two letters.</p>'; return; }
+    host.innerHTML = '<div class="sk h-10 w-full"></div>';
+    var res = await api("/geocode?q=" + encodeURIComponent(q));
+    if (res.error) { host.innerHTML = '<p class="muted text-sm">' + esc(res.error) + "</p>"; return; }
+    if (!res.results || !res.results.length) { host.innerHTML = '<p class="muted text-sm">Nothing found for “' + esc(q) + "”.</p>"; return; }
+    var out = "";
+    res.results.forEach(function (g, i) {
+      out += '<button class="btn w-full text-left mt-1" data-city="' + i + '">' +
+        esc([g.name, g.admin1, g.country].filter(Boolean).join(", ")) + "</button>";
+    });
+    host.innerHTML = out;
+    host.querySelectorAll("[data-city]").forEach(function (b) {
+      b.onclick = function () {
+        var g = res.results[Number(b.getAttribute("data-city"))];
+        host.innerHTML = '<div class="sk h-10 w-full"></div>';
+        saveSettings({ city: [g.name, g.country].filter(Boolean).join(", "), lat: g.lat, lon: g.lon, tz: g.tz });
+      };
+    });
+  }
+
+  async function saveSettings(patch) {
+    var res = await send("PUT", "/settings", patch);
+    if (res.error) { $("wx-body").insertAdjacentHTML("beforeend", '<p class="text-sm mt-2">' + esc(res.error) + "</p>"); return; }
+    S.settings = res.settings;
+    S.weather = res.weather;
+    S.fetchedAt = Date.now();
+    renderWeather();
+  }
+
+  async function refreshWeather(force) {
+    if (!S.settings || !S.settings.city) return;
+    var res = await api("/weather" + (force ? "?force=1" : ""));
+    if (res.weather !== undefined) { S.weather = res.weather; S.fetchedAt = Date.now(); renderWeather(); }
+  }
+
+  $("wx-change").onclick = function () { renderSearch($("wx-body"), true); };
+
+  // ---------- to-dos ----------
+  function todoRow(t, done) {
+    var editing = S.editing === t.id;
+    return '<div class="rowline py-1.5 flex items-center gap-2" data-id="' + t.id + '">' +
+      '<button class="check-btn iconbtn" data-toggle="' + t.id + '" aria-label="' + (done ? "Mark as not done" : "Mark as done") + '" ' + (S.canEdit ? "" : "disabled") + ">" +
+        '<span class="check' + (done ? " on" : "") + '">' + (done ? "✓" : "") + "</span></button>" +
+      (editing
+        ? '<input class="field flex-1" id="edit-in" value="' + esc(t.text) + '" maxlength="500">'
+        : '<span class="flex-1 min-w-0 break-words text-base' + (done ? " line-through muted" : "") + '"' +
+          (S.canEdit && !done ? ' role="button" tabindex="0" title="Edit" data-edit="' + t.id + '"' : "") + ">" + esc(t.text) + "</span>") +
+      (S.canEdit && !done && !editing
+        ? '<button class="iconbtn" data-move="up" data-id="' + t.id + '" aria-label="Move up" title="Move up">↑</button>' +
+          '<button class="iconbtn" data-move="down" data-id="' + t.id + '" aria-label="Move down" title="Move down">↓</button>'
+        : "") +
+      (S.canEdit ? '<button class="iconbtn" data-del="' + t.id + '" aria-label="Delete" title="Delete">✕</button>' : "") +
+      "</div>";
+  }
+
+  function renderTodos() {
+    var open = S.todos.filter(function (t) { return !t.done; });
+    var done = S.todos.filter(function (t) { return !!t.done; });
+    $("todo-count").textContent = open.length ? open.length + " to do" : "";
+    $("todo-add-row").hidden = !S.canEdit;
+    var host = $("todo-body");
+    if (!open.length) {
+      host.innerHTML = '<p class="muted text-sm py-1">' + (S.canEdit ? "Nothing to do. Add the first thing above, or ask " + esc(who()) + "." : "Nothing to do.") + "</p>";
+    } else {
+      host.innerHTML = open.map(function (t) { return todoRow(t, false); }).join("");
+      host.querySelectorAll('[data-move="up"]').forEach(function (b, i) { b.disabled = i === 0; });
+      host.querySelectorAll('[data-move="down"]').forEach(function (b, i, all) { b.disabled = i === all.length - 1; });
+    }
+    var wrap = $("done-wrap");
+    wrap.hidden = !done.length;
+    $("done-toggle").textContent = "Done (" + done.length + ")";
+    $("done-toggle").setAttribute("aria-expanded", S.showDone ? "true" : "false");
+    $("done-body").hidden = !S.showDone;
+    $("done-clear").hidden = !S.showDone || !S.canEdit;
+    $("done-body").innerHTML = done.map(function (t) { return todoRow(t, true); }).join("");
+    var ed = $("edit-in");
+    if (ed) {
+      ed.focus();
+      ed.addEventListener("keydown", function (e) {
+        if (e.key === "Enter") { e.preventDefault(); commitEdit(ed.value); }
+        if (e.key === "Escape") { e.preventDefault(); S.editing = null; renderTodos(); }
+      });
+      ed.addEventListener("blur", function () { commitEdit(ed.value); });
+    }
+  }
+
+  function todoError(msg) {
+    var el = $("todo-err");
+    el.textContent = msg || "";
+    el.hidden = !msg;
+  }
+
+  async function applyTodos(promise) {
+    if (S.busy) return;
+    S.busy = true;
+    try {
+      var res = await promise;
+      if (res.error) todoError(res.error);
+      else { todoError(""); if (res.todos) S.todos = res.todos; }
+    } finally {
+      S.busy = false;
+      renderTodos();
+    }
+  }
+
+  function commitEdit(value) {
+    var id = S.editing;
+    if (id === null) return;
+    S.editing = null;
+    var text = String(value || "").trim();
+    var cur = S.todos.filter(function (t) { return t.id === id; })[0];
+    if (!text || !cur || text === cur.text) { renderTodos(); return; }
+    cur.text = text;
+    applyTodos(send("PATCH", "/todos/" + id, { text: text }));
+  }
+
+  async function addTodo() {
+    var el = $("todo-in"), text = el.value.trim();
+    if (!text) return;
+    el.value = "";
+    await applyTodos(send("POST", "/todos", { text: text }));
+    el.focus();
+  }
+  $("todo-add").onclick = addTodo;
+  $("todo-in").addEventListener("keydown", function (e) { if (e.key === "Enter") { e.preventDefault(); addTodo(); } });
+
+  $("todo-card").addEventListener("click", function (e) {
+    var t;
+    if ((t = e.target.closest("[data-toggle]"))) {
+      var id = Number(t.getAttribute("data-toggle"));
+      var cur = S.todos.filter(function (x) { return x.id === id; })[0];
+      if (!cur) return;
+      cur.done = cur.done ? 0 : 1;
+      renderTodos();
+      applyTodos(send("PATCH", "/todos/" + id, { done: !!cur.done }));
+    } else if ((t = e.target.closest("[data-del]"))) {
+      var did = Number(t.getAttribute("data-del"));
+      S.todos = S.todos.filter(function (x) { return x.id !== did; });
+      renderTodos();
+      applyTodos(send("DELETE", "/todos/" + did));
+    } else if ((t = e.target.closest("[data-move]"))) {
+      var mid = Number(t.getAttribute("data-id"));
+      var open = S.todos.filter(function (x) { return !x.done; });
+      var at = open.findIndex(function (x) { return x.id === mid; });
+      var to = t.getAttribute("data-move") === "up" ? at - 1 : at + 1;
+      if (at < 0 || to < 0 || to >= open.length) return;
+      applyTodos(send("PATCH", "/todos/" + mid, { position: to }));
+    } else if ((t = e.target.closest("[data-edit]"))) {
+      S.editing = Number(t.getAttribute("data-edit"));
+      renderTodos();
+    }
+  });
+  $("todo-card").addEventListener("keydown", function (e) {
+    var t = e.target.closest("[data-edit]");
+    if (t && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); S.editing = Number(t.getAttribute("data-edit")); renderTodos(); }
+  });
+  $("done-toggle").onclick = function () { S.showDone = !S.showDone; renderTodos(); };
+  $("done-clear").onclick = function () { applyTodos(send("DELETE", "/todos?done=1")); };
+
+  // ---------- the setup ----------
+  $("w-setup").onclick = async function () {
+    var b = this, err = $("w-err");
+    b.disabled = true;
+    b.textContent = "Setting up…";
+    err.hidden = true;
+    try {
+      await otodock.platform("setup.complete", { scope: "user" });
+      showHome(true);
+    } catch (e) {
+      b.disabled = false;
+      b.textContent = "Set up";
+      err.textContent = "That did not go through (" + esc((e && e.message) || String(e)) + "). Try again, or say hello to " + who() + " in a chat.";
+      err.hidden = false;
+    }
+  };
+
+  // A setup completed in a chat removes the guide file; the platform says so
+  // on the file_changes feed and the status decides.
+  function watchSetup() {
+    try {
+      otodock.feed("file_changes", function (rows, err) {
+        if (err || !rows || S.mode !== "welcome") return;
+        var hit = rows.some(function (r) {
+          var p = String((r && r.rel_path) || "");
+          return p.indexOf("users/") === 0 && /\/context\/user-setup\.md$/.test(p);
+        });
+        if (!hit) return;
+        otodock.platform("setup.status").then(function (st) {
+          if (st && st.user !== "pending") showHome(true);
+        }).catch(function () {});
+      });
+    } catch (e) { /* no feeds on a shared link */ }
+  }
+
+  // The server pushes every write, the assistant's from a chat included;
+  // otodock.ws reconnects by itself.
+  function live() {
+    try {
+      var ws = otodock.ws("/live");
+      ws.onmessage = function (ev) {
+        var m;
+        try { m = JSON.parse(ev.data); } catch (e) { return; }
+        if (m.type === "settings" && m.settings) {
+          S.settings = m.settings;
+          if (m.weather !== undefined) S.weather = m.weather;
+          S.fetchedAt = Date.now();
+          if (S.mode === "home") renderWeather();
+        } else if (m.type === "todos" && m.todos) {
+          S.todos = m.todos;
+          if (S.mode === "home" && S.editing === null && !S.busy) renderTodos();
+        }
+      };
+    } catch (e) { /* no socket on this view */ }
+  }
+
+  // ---------- boot ----------
+  function applyBootstrap(b) {
+    if (!b || b.error) { S.settings = S.settings || Object.assign({}, { city: "" }); renderWeather(); renderTodos(); return; }
+    S.settings = b.settings || { city: "" };
+    S.weather = b.weather || null;
+    S.todos = b.todos || [];
+    S.canEdit = !b.viewer || b.viewer.canEdit !== false;
+    S.fetchedAt = Date.now();
+    if (!S.viewer && b.viewer && b.viewer.name) { S.viewer = { name: b.viewer.name }; greet(); }
+    renderWeather();
+    renderTodos();
+  }
+
+  async function boot() {
+    greet();
+    // The welcome renders from the setup state alone; the server warms
+    // meanwhile so the page behind it is ready when the member arrives.
+    var warm = api("/bootstrap").then(applyBootstrap, function () { applyBootstrap(null); });
+    var status = null;
+    try { status = await otodock.platform("setup.status"); } catch (e) { status = null; }
+    if (status) {
+      S.agent = String(status.display_name || "");
+      S.mcps = status.mcps && typeof status.mcps === "object" ? status.mcps : null;
+      nameAgent();
+    }
+    if (status && status.user === "pending") showWelcome(); else showHome(false);
+    try {
+      var me = await otodock.platform("viewer.me");
+      if (me && me.name) { S.viewer = me; greet(); }
+    } catch (e) { /* a link viewer: the server's name will do */ }
+    watchSetup();
+    await warm;
+    live();
+  }
+
+  setInterval(function () {
+    if (document.visibilityState === "visible" && S.mode === "home") refreshWeather(false);
+  }, REFRESH_MS);
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible" && S.mode === "home" && Date.now() - S.fetchedAt > REFRESH_MS) refreshWeather(false);
+  });
+
+  addEventListener("load", function () { boot(); });
+})();
+</script>

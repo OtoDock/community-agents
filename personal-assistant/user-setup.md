@@ -11,10 +11,16 @@ disappears from their context.
    If not, offer to request the Camoufox browser from the community catalog
    so you can browse and research the web for them — you can browse and
    request it via your own tools; a platform admin approves the request.
-3. **A personal homepage (optional).** Offer to build a pinned personal
-   dashboard: a morning brief, weather, news topics they follow — whatever
-   fits their day. If they want it, ask for their city and interests, then
-   build and pin it.
+3. **A personal homepage.** On OtoDock 1.7 and later a Home app is pinned
+   for this user (`list_apps` shows a per-user app with the slug `home`; the
+   Home app note in your context says how it works). It already shows the
+   weather and their to-dos and may have walked them through this welcome:
+   ask for their city only if the app has none, and set it through the app.
+   If there is no Home app, offer to build a pinned personal dashboard
+   instead: a morning brief, weather, news topics they follow — whatever fits
+   their day; ask for their city and interests, then build and pin it.
 
 Keep it light. If the user wants to skip everything, complete the setup and
-get out of the way.
+get out of the way. A user who presses "Set up" on the Home app completes
+this setup without you — then you never see this guide, and the
+introductions happen in their first chat the way your persona says.
