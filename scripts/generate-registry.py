@@ -33,6 +33,10 @@ APP_FOLDERS = (("apps", "agent"), ("user-apps", "user"))
 MAX_APPS = 4
 MAX_CHECKS = 8
 NEVER_IN_AN_APP = ("node_modules", "data")
+# The platform's app_sandbox.SERVER_ENTRIES (the prep gate proves the two
+# agree): an app whose folder holds one runs a server, which the install
+# dialog says.
+SERVER_ENTRIES = ("server/index.ts", "server/index.js")
 # What an installer's consent may never cover on a copy seeded for someone
 # else (each member approves such a copy on their own card).
 OWNER_ACTION_TYPES = {"mcp_tool", "fire_task"}
@@ -157,6 +161,7 @@ def _summarize_apps(slug_dir: Path) -> list[dict]:
                 "tree_sha": tree,
                 "sig": _template_app_sig(app_json, blueprint or None, tree),
                 "owner_approval": visibility == "user" and _needs_owner(app_json),
+                "has_server": any(rel in SERVER_ENTRIES for rel, _ in files),
                 "requires_mcps": [str(n) for n in (req.get("mcps") or []) if isinstance(n, str)]
                 if isinstance(req, dict) else [],
             })

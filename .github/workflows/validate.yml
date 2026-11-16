@@ -1,5 +1,15 @@
 name: Validate templates
 
+# The catalog's own contract, on every push and pull request: registry.json
+# matches the templates, and every template passes the schema the platform
+# installs against (mcps/agent-template.schema.json of OtoDock/oto-dock,
+# fetched at the latest release and checked against its sha256: its id names
+# the release, so the two values move together after every publish, and the
+# platform's release gate reports a pin that lags). The department sets'
+# schema (mcps/department.schema.json) joins after the release that first
+# ships it. This file lives in the PREP repo and is synced to the public
+# catalog by dev/publish-catalog.sh.
+
 on:
   push:
     branches: [main]
@@ -8,6 +18,10 @@ on:
 
 permissions:
   contents: read
+
+env:
+  SCHEMA_URL: https://raw.githubusercontent.com/OtoDock/oto-dock/v1.9.1/mcps/agent-template.schema.json
+  SCHEMA_SHA256: 67b5d7ad74bc014bf0b034e789d631f8f71a4da2e7da51da8cc0443160a01ff2
 
 jobs:
   validate:
@@ -21,3 +35,53 @@ jobs:
           python-version: "3.11"
       - name: Check registry is up to date
         run: python3 scripts/generate-registry.py --check
+      - name: The platform's template schema
+        run: |
+          curl -fsSLo "$RUNNER_TEMP/agent-template.schema.json" "$SCHEMA_URL"
+          echo "$SCHEMA_SHA256  $RUNNER_TEMP/agent-template.schema.json" | sha256sum -c -
+          echo "OTODOCK_TEMPLATE_SCHEMA=$RUNNER_TEMP/agent-template.schema.json" >> "$GITHUB_ENV"
+      - name: Every template follows the schema
+        run: |
+          python3 -m pip install -q "jsonschema==4.26.0"
+          python3 - <<'PY'
+          import fnmatch, json, os, pathlib, sys
+          from jsonschema import Draft202012Validator
+          schema = json.loads(pathlib.Path(os.environ["OTODOCK_TEMPLATE_SCHEMA"]).read_text(encoding="utf-8"))
+          validator = Draft202012Validator(schema)
+          patterns = [str(p).split("/") for p in schema.get("x-otodock-documents") or []]
+          def entries(folder):
+              try:
+                  return sorted(os.scandir(folder), key=lambda e: e.name)
+              except OSError:
+                  return []
+          def expand(folder, parts, prefix=""):
+              head, rest = parts[0], parts[1:]
+              for entry in entries(folder):
+                  if entry.name.startswith(".") or not fnmatch.fnmatchcase(entry.name, head):
+                      continue
+                  rel = f"{prefix}{entry.name}"
+                  if rest:
+                      if entry.is_dir(follow_symlinks=False):
+                          yield from expand(pathlib.Path(entry.path), rest, rel + "/")
+                  elif not entry.is_dir(follow_symlinks=False):
+                      yield rel
+          bad = 0
+          folders = sorted(p.parent for p in pathlib.Path(".").glob("*/agent.json"))
+          for folder in folders:
+              document, named = {}, set()
+              for parts in patterns:
+                  for rel in expand(folder, parts):
+                      named.add(rel)
+                      try:
+                          document[rel] = json.loads((folder / rel).read_text(encoding="utf-8"))
+                      except ValueError as exc:
+                          print(f"{folder.name}: invalid JSON in {rel}: {exc}"); bad += 1
+              for entry in entries(folder):
+                  if not entry.name.startswith(".") and entry.name not in named and entry.is_file(follow_symlinks=False):
+                      document[entry.name] = True
+              for e in sorted(validator.iter_errors(document), key=lambda e: [str(p) for p in e.absolute_path]):
+                  where = "/".join(str(p) for p in e.absolute_path) or "(document)"
+                  print(f"{folder.name}: {where}: {e.message}"); bad += 1
+          print(f"{len(folders)} template(s), {bad} problem(s)")
+          sys.exit(1 if bad else 0)
+          PY

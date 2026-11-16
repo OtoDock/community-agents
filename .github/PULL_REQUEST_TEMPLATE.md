@@ -11,7 +11,7 @@
 ## Checklist
 
 - [ ] `python3 scripts/generate-registry.py` was run and `registry.json` is committed.
-- [ ] The slug and the folder name match; `agent.json` follows CONTRIBUTING.md and pins no engine or model.
+- [ ] The slug and the folder name match. `agent.json` follows CONTRIBUTING.md and pins no engine or model.
 - [ ] Every MCP in `mcps.json` uses its canonical name and exists in community-mcps or among the platform's bundled MCPs.
 - [ ] `agent.md` and `prompt.md` are byte-identical.
 - [ ] `README.md` explains what the agent does, what setup it needs and who would use it.

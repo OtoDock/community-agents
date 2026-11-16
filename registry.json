@@ -48,6 +48,7 @@
             "title": "Home"
           },
           "blueprint_json": null,
+          "has_server": true,
           "owner_approval": false,
           "sig": "42809c543d4eb24aade08dc8fe6da93d93ab7f8792185f20b48ce6e3056a33bb",
           "slug": "home",
@@ -125,5 +126,5 @@
   ],
   "platform_min_version": "0.4.0",
   "registry_version": "1",
-  "updated_at": "2026-09-29T23:40:17Z"
+  "updated_at": "2026-11-16T23:58:32Z"
 }

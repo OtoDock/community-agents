@@ -4,7 +4,23 @@ Catalog of community-contributed agent templates for the [OtoDock](https://githu
 
 ## What's an agent template?
 
-A pre-built agent: prompt, MCP requirements, optional scheduled tasks, optional triggers, optional notifications, optional ready-made mini-app dashboards (platform 1.5+), optional skill packages, optional setup guides (agent-wide and per-user), optional auto-context docs. Manager picks one from the catalog, the platform creates the agent, cascades the required MCPs (installing missing ones via admin approval), seeds the tasks/triggers/notifications/dashboards, copies the setup guides, and the agent is ready — dashboards included, pinned and visible on the agent's home from the first minute.
+A pre-built agent: a prompt and its MCP requirements. It may also ship:
+
+- scheduled tasks, triggers and notifications
+- ready-made mini-app dashboards
+- skill packages
+- setup guides, agent-wide and per-user
+- auto-context docs
+
+A manager picks one from the catalog. Then the platform:
+
+- creates the agent
+- cascades the required MCPs, and installs missing ones via admin approval
+- seeds the tasks, triggers, notifications and dashboards
+- copies the setup guides
+
+The agent is then ready, dashboards included. They are pinned and visible on
+the agent's home from the first minute.
 
 ## Available agents
 

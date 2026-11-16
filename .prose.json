@@ -1,0 +1,32 @@
+{
+  "_comment": "The files of this catalog written for people, read by the writing check of the OtoDock repository (scripts/prose/prose_check.py there, whose WRITING.md is the rules page). A markdown file no group claims and no entry excludes fails the check.",
+  "groups": [
+    {"name": "reader", "use": "reader", "release_floor": true, "files": ["README.md", "SECURITY.md", "*/README.md"]},
+    {"name": "developer", "use": "developer", "files": [".github/PULL_REQUEST_TEMPLATE.md"]},
+    {"name": "contributing", "use": "developer", "files": ["CONTRIBUTING.md"],
+     "skip": {"version": "it names the release that reads each manifest field"}},
+    {"name": "manifest texts", "use": "reader", "release_floor": true, "read": "json-fields",
+     "files": ["*/agent.json"], "fields": ["description"]}
+  ],
+  "between": [
+    {"file": "README.md", "from": "<!-- catalog:start -->", "to": "<!-- catalog:end -->", "skip": "all"}
+  ],
+  "allowed": {
+    "CONTRIBUTING.md": [
+      {"phrase": "Not installed; NOT in any catalog", "rule": "semicolon",
+       "reason": "the preflight check's message, quoted as the platform writes it"}
+    ]
+  },
+  "excluded": {
+    "*/agent.md": "the agent's persona, which the agent reads",
+    "*/prompt.md": "a copy of the persona, which the agent reads",
+    "*/setup.md": "a setup guide the agent reads and walks a manager through",
+    "*/user-setup.md": "an onboarding guide the agent reads and walks each user through",
+    "*/context/**": "context the agent loads",
+    "*/apps/**": "an app's own files, which the agent and the app read",
+    "*/user-apps/**": "an app's own files, which the agent and the app read",
+    "*/checks/**": "a check's own files, which the check reads",
+    "*/skills/**": "an agent loads these skills",
+    "CODE_OF_CONDUCT.md": "the Contributor Covenant, as its authors wrote it"
+  }
+}
