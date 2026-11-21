@@ -5,10 +5,10 @@ name: Validate templates
 # installs against (mcps/agent-template.schema.json of OtoDock/oto-dock,
 # fetched at the latest release and checked against its sha256: its id names
 # the release, so the two values move together after every publish, and the
-# platform's release gate reports a pin that lags). The department sets'
-# schema (mcps/department.schema.json) joins after the release that first
-# ships it. This file lives in the PREP repo and is synced to the public
-# catalog by dev/publish-catalog.sh.
+# platform's release gate reports a pin that lags). Every department set
+# (<slug>/department.json) passes mcps/department.schema.json the same way.
+# This file lives in the PREP repo and is synced to the public catalog by
+# dev/publish-catalog.sh.
 
 on:
   push:
@@ -20,8 +20,10 @@ permissions:
   contents: read
 
 env:
-  SCHEMA_URL: https://raw.githubusercontent.com/OtoDock/oto-dock/v1.9.1/mcps/agent-template.schema.json
-  SCHEMA_SHA256: 67b5d7ad74bc014bf0b034e789d631f8f71a4da2e7da51da8cc0443160a01ff2
+  SCHEMA_URL: https://raw.githubusercontent.com/OtoDock/oto-dock/v2.0.0/mcps/agent-template.schema.json
+  SCHEMA_SHA256: c7541c18225a9753d7f80f367110927a0f765b66c8dbf2bbb4349fb256b5f5df
+  DEPARTMENT_SCHEMA_URL: https://raw.githubusercontent.com/OtoDock/oto-dock/v2.0.0/mcps/department.schema.json
+  DEPARTMENT_SCHEMA_SHA256: 04d29ac6b6e8c9704acbe0423797a07f614036ce2b2f32c3986eb43521ab4889
 
 jobs:
   validate:
@@ -40,6 +42,9 @@ jobs:
           curl -fsSLo "$RUNNER_TEMP/agent-template.schema.json" "$SCHEMA_URL"
           echo "$SCHEMA_SHA256  $RUNNER_TEMP/agent-template.schema.json" | sha256sum -c -
           echo "OTODOCK_TEMPLATE_SCHEMA=$RUNNER_TEMP/agent-template.schema.json" >> "$GITHUB_ENV"
+          curl -fsSLo "$RUNNER_TEMP/department.schema.json" "$DEPARTMENT_SCHEMA_URL"
+          echo "$DEPARTMENT_SCHEMA_SHA256  $RUNNER_TEMP/department.schema.json" | sha256sum -c -
+          echo "OTODOCK_DEPARTMENT_SCHEMA=$RUNNER_TEMP/department.schema.json" >> "$GITHUB_ENV"
       - name: Every template follows the schema
         run: |
           python3 -m pip install -q "jsonschema==4.26.0"
@@ -83,5 +88,26 @@ jobs:
                   where = "/".join(str(p) for p in e.absolute_path) or "(document)"
                   print(f"{folder.name}: {where}: {e.message}"); bad += 1
           print(f"{len(folders)} template(s), {bad} problem(s)")
+          sys.exit(1 if bad else 0)
+          PY
+      - name: Every department set follows the schema
+        run: |
+          python3 - <<'PY'
+          import json, os, pathlib, sys
+          from jsonschema import Draft202012Validator
+          schema = json.loads(pathlib.Path(os.environ["OTODOCK_DEPARTMENT_SCHEMA"]).read_text(encoding="utf-8"))
+          validator = Draft202012Validator(schema)
+          bad = 0
+          sets = sorted(pathlib.Path(".").glob("*/department.json"))
+          for path in sets:
+              try:
+                  document = json.loads(path.read_text(encoding="utf-8"))
+              except ValueError as exc:
+                  print(f"{path.parent.name}: invalid JSON in department.json: {exc}"); bad += 1
+                  continue
+              for e in sorted(validator.iter_errors(document), key=lambda e: [str(p) for p in e.absolute_path]):
+                  where = "/".join(str(p) for p in e.absolute_path) or "(document)"
+                  print(f"{path.parent.name}: {where}: {e.message}"); bad += 1
+          print(f"{len(sets)} department set(s), {bad} problem(s)")
           sys.exit(1 if bad else 0)
           PY
