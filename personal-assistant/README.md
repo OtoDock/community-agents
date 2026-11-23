@@ -22,3 +22,5 @@ itself.
 A full **Personal Assistant Pro** edition is coming to Browse Community
 Agents. It has Google Workspace, maps, phone calls and browsing
 preconfigured.
+
+This line is a test — it breaks the writing rules on purpose.
