@@ -24,6 +24,13 @@ env:
   SCHEMA_SHA256: c7541c18225a9753d7f80f367110927a0f765b66c8dbf2bbb4349fb256b5f5df
   DEPARTMENT_SCHEMA_URL: https://raw.githubusercontent.com/OtoDock/oto-dock/v2.0.0/mcps/department.schema.json
   DEPARTMENT_SCHEMA_SHA256: 04d29ac6b6e8c9704acbe0423797a07f614036ce2b2f32c3986eb43521ab4889
+  # The writing check of OtoDock/oto-dock (its WRITING.md is the rules page):
+  # the check's two files at a full commit of that repository's main, each
+  # checked against its sha256. The platform's release gate reports a pin
+  # that lags.
+  PROSE_URL: https://raw.githubusercontent.com/OtoDock/oto-dock/e67d0240025401f34906a01c5f59ad97a1e997a2/scripts/prose
+  PROSE_CHECK_SHA256: f3ba0196f6f4ac2e6b726e5da969b0e9a4bb28e364cf287fd945da587d85af76
+  PROSE_RULES_SHA256: ee3c9dcf5e649f0df20e1d0d39e22377b95f923398eb697b3ea8f6528957efd0
 
 jobs:
   validate:
@@ -111,3 +118,30 @@ jobs:
           print(f"{len(sets)} department set(s), {bad} problem(s)")
           sys.exit(1 if bad else 0)
           PY
+
+  # Every page of this catalog that is written for people follows the writing
+  # rules: the files .prose.json names, on the oldest Python the check
+  # promises. The check's two files land outside the workspace. Standard
+  # library only: nothing to install.
+  prose:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5
+        with:
+          python-version: "3.10"
+      - name: The writing check
+        run: |
+          mkdir -p "$RUNNER_TEMP/prose"
+          curl -fsSLo "$RUNNER_TEMP/prose/prose_check.py" "$PROSE_URL/prose_check.py"
+          curl -fsSLo "$RUNNER_TEMP/prose/rules.json" "$PROSE_URL/rules.json"
+          echo "$PROSE_CHECK_SHA256  $RUNNER_TEMP/prose/prose_check.py" | sha256sum -c -
+          echo "$PROSE_RULES_SHA256  $RUNNER_TEMP/prose/rules.json" | sha256sum -c -
+      - name: The check tests itself
+        run: python "$RUNNER_TEMP/prose/prose_check.py" --self-test
+      - name: Every page follows the writing rules
+        # A nested .prose.json would exempt its folder: none belongs here.
+        run: python "$RUNNER_TEMP/prose/prose_check.py" . --no-nested

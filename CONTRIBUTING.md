@@ -344,3 +344,12 @@ Anything in this folder is copied recursively to the new agent's `config/context
 6. A template that ships `apps/`, `user-apps/` or `checks/` was tried on a 1.7 platform. It was installed from a local catalog, the apps approved and opened, and a second member attached and given their copy.
 
 The CI workflow runs `generate-registry.py --check` on every PR and rejects stale registries.
+
+CI also runs the writing check, the job `prose`. It reads the files that `.prose.json` lists: every README and the descriptions a person sees. The rules are in [WRITING.md](https://github.com/OtoDock/oto-dock/blob/main/WRITING.md) of OtoDock/oto-dock. To run it before you push:
+
+```bash
+base=https://raw.githubusercontent.com/OtoDock/oto-dock/main/scripts/prose
+curl -fsSL --create-dirs -o /tmp/prose/prose_check.py "$base/prose_check.py"
+curl -fsSL -o /tmp/prose/rules.json "$base/rules.json"
+python3 /tmp/prose/prose_check.py . --no-nested
+```
